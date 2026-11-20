@@ -49,9 +49,18 @@ struct Location: Codable {
     }
 }
 
+struct Envelope: Codable {
+    let generationtimeMs: Double
+    let results: [Location]
+    enum CodingKeys: String, CodingKey {
+        case generationtimeMs = "generationtime_ms"
+        case results
+    }
+}
+
 
 final class GeolocatingApi {
-    static func fetchLocationDummy() async -> Location {
+    static func fetchLocationDummy() async throws -> [Location] {
         var components = URLComponents(
             string: "https://geocoding-api.open-meteo.com/v1/search"
         )!
@@ -64,30 +73,36 @@ final class GeolocatingApi {
 
         var request = URLRequest(url: components.url!)
         request.httpMethod = "GET"
-        var responses: (Data, URLResponse)? = nil
-        do  {
-            responses = try await URLSession.shared.data(for: request)
-        } catch {
-            print(" request failed: \(error)")
-        }
-        let data: Data = responses!.0
+
+        let (data, _) = try await URLSession.shared.data(for: request)
 
         print("RAW RESPONSE (\(data.count) bytes):")
         print(String(data: data, encoding: .utf8) ?? "<non-UTF8, \(data.count) bytes>")
+        if let json = data.json() {
+            print(json)
+        }
 
-        if let object = try? JSONSerialization.jsonObject(with: data),
+        do {
+            let envelope: Envelope = try JSONDecoder().decode(Envelope.self, from: data)
+            return envelope.results
+        } catch {
+            print("❌ decoding failed: \(error)")
+            throw error
+        }
+    }
+}
+typealias Json = String
+extension Data {
+    func json() -> Json? {
+        if let object = try? JSONSerialization.jsonObject(with: self),
            let pretty = try? JSONSerialization.data(
                withJSONObject: object,
                options: [.prettyPrinted, .sortedKeys]
            ),
            let text = String(data: pretty, encoding: .utf8) {
-            print("PARSED JSON:\n\(text)")
+           return text
         } else {
-            print(" response is not valid JSON — raw output above")
+           return nil
         }
-
-        let Location: Location = try! JSONDecoder().decode(Location.self, from: data)
-        return Location
-        
     }
 }
