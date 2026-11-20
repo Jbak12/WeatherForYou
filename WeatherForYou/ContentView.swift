@@ -16,6 +16,12 @@ struct ContentView: View {
             Text("Hello, world!")
         }
         .padding()
+        .task {
+            
+            try! await Task.sleep(for: .seconds(10))
+            let ziomek = await GeolocatingApi.fetchLocationDummy()
+            print(ziomek)
+        }
     }
 }
 
