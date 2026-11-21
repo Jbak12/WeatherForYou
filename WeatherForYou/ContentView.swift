@@ -7,25 +7,33 @@
 
 import SwiftUI
 
+struct dummyView: View {
+    var body: some View {
+        Image(._02MoonStarsLine)
+            .foregroundStyle(.iconPrimary)
+    }
+}
+
 struct ContentView: View {
     @State private var locations: [Location] = []
     @State private var isLoading = true
     @State private var errorMessage: String?
 
     var body: some View {
-        NavigationStack {
-            content
-                .navigationTitle("Places")
-                .toolbar {
-                    ToolbarItem(placement: .primaryAction) {
-                        Button("Reload", systemImage: "arrow.clockwise") {
-                            Task { await load() }
-                        }
-                        .disabled(isLoading)
-                    }
-                }
-        }
-        .task { await load() }
+//        NavigationStack {
+//            content
+//                .navigationTitle("Places")
+//                .toolbar {
+//                    ToolbarItem(placement: .primaryAction) {
+//                        Button("Reload", systemImage: "arrow.clockwise") {
+//                            Task { await load() }
+//                        }
+//                        .disabled(isLoading)
+//                    }
+//                }
+//        }
+//        .task { await load() }
+        dummyView()
     }
 
     @ViewBuilder
