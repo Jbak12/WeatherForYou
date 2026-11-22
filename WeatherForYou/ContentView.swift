@@ -15,7 +15,7 @@ struct dummyView: View {
 }
 
 struct ContentView: View {
-    @State private var locations: [Location] = []
+    @State private var locations: [LocationDto] = []
     @State private var isLoading = true
     @State private var errorMessage: String?
 
@@ -76,7 +76,7 @@ struct ContentView: View {
 }
 
 private struct LocationRow: View {
-    let location: Location
+    let location: LocationDto
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {

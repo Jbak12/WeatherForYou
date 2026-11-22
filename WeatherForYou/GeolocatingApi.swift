@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Location: Codable {
+struct LocationDto: Codable, Sendable, Identifiable, Equatable {
     let id: Int
     let name: String
     let latitude: Double
@@ -51,7 +51,7 @@ struct Location: Codable {
 
 struct Envelope: Codable {
     let generationtimeMs: Double
-    let results: [Location]
+    let results: [LocationDto]
     enum CodingKeys: String, CodingKey {
         case generationtimeMs = "generationtime_ms"
         case results
@@ -60,7 +60,7 @@ struct Envelope: Codable {
 
 
 final class GeolocatingApi {
-    static func fetchLocationDummy() async throws -> [Location] {
+    static func fetchLocationDummy() async throws -> [LocationDto] {
         var components = URLComponents(
             string: "https://geocoding-api.open-meteo.com/v1/search"
         )!
