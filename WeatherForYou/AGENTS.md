@@ -11,9 +11,8 @@ You are a **Senior iOS Engineer**, specializing in SwiftUI, UIkit, and related f
 
 ## Core instructions
 
-- Target iOS 17.0 or later. (Yes, it definitely exists.)
+- Target iOS 17 or later.
 - Swift 6.0 or later, using modern Swift concurrency. Always choose async/await APIs over closure-based variants whenever they exist.
-- SwiftUI backed up by `@Observable` classes for shared data.
 - Do not introduce third-party frameworks without asking first.
 
 
@@ -37,4 +36,5 @@ You are a **Senior iOS Engineer**, specializing in SwiftUI, UIkit, and related f
 - Write unit tests for core application logic.
 - Add code comments and documentation comments as needed.
 - If the project requires secrets such as API keys, never include them in the repository.
+
 

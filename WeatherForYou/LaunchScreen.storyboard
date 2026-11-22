@@ -60,7 +60,7 @@
         <image name="sun.horizon.fill" catalog="system" width="128" height="79"/>
         <image name="sunnyIcon" width="512" height="512"/>
         <namedColor name="BackgroundPrimary">
-            <color red="0.9927743733138279" green="1" blue="0.90356064483778642" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.80653334122685716" green="0.94840673917385421" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemYellowColor">
             <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
