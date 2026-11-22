@@ -12,7 +12,7 @@ import StaticURL
 ///
 /// See https://open-meteo.com/en/docs for the request and response formats.
 struct OpenMeteoForecastService: ForecastService {
-    private static let baseURL = #staticURL("https://api.open-meteo.com")
+    private static let baseURL: URL = #staticURL("https://api.open-meteo.com")
 
     private static let currentVariables = [
         "temperature_2m",

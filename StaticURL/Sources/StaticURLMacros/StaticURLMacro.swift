@@ -1,3 +1,4 @@
+// Conditionalize macro plugin imports to avoid incompatible module errors
 import Foundation
 import SwiftCompilerPlugin
 import SwiftSyntax
@@ -39,6 +40,8 @@ enum StaticURLMacroError: String, Error, CustomStringConvertible {
     public var description: String { rawValue }
 }
 
+#if canImport(SwiftCompilerPlugin)
 @main struct StaticURLPlugin: CompilerPlugin {
     let providingMacros: [Macro.Type] = [StaticURLMacro.self]
 }
+#endif
