@@ -6,13 +6,14 @@
 //
 
 import Foundation
+import StaticURL
 
 /// A `GeocodingService` backed by the Open-Meteo geocoding API.
 ///
 /// See https://open-meteo.com/en/docs/geocoding-api for the request and
 /// response formats.
 struct OpenMeteoGeocodingService: GeocodingService {
-    private static let baseURLString = "https://geocoding-api.open-meteo.com"
+    private static let baseURL = #staticURL("https://geocoding-api.open-meteo.com")
 
     private let client: APIClient
 
@@ -20,10 +21,7 @@ struct OpenMeteoGeocodingService: GeocodingService {
         if let client {
             self.client = client
         } else {
-            guard let baseURL = URL(string: Self.baseURLString) else {
-                preconditionFailure("Invalid Open-Meteo geocoding base URL.")
-            }
-            self.client = DefaultAPIClient(baseURL: baseURL)
+            self.client = DefaultAPIClient(baseURL: Self.baseURL)
         }
     }
 

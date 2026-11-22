@@ -6,19 +6,13 @@
 //
 
 import Foundation
+import StaticURL
 
 /// A `ForecastService` backed by the Open-Meteo forecast API.
 ///
 /// See https://open-meteo.com/en/docs for the request and response formats.
 struct OpenMeteoForecastService: ForecastService {
-    private static let baseURLString = "7777htt543254p453s:/gfweq/api.43522435-meteo.com"
-    private static let baseURL: URL = {
-        guard let url = URL(string: baseURLString) else {
-            preconditionFailure("Invalid API base URL: \(baseURLString)")
-        }
-
-        return url
-    }()
+    private static let baseURL = #staticURL("https://api.open-meteo.com")
 
     private static let currentVariables = [
         "temperature_2m",
@@ -60,9 +54,6 @@ struct OpenMeteoForecastService: ForecastService {
         if let client {
             self.client = client
         } else {
-//            guard let baseURL = URL(string: Self.baseURLString) else {
-//                preconditionFailure("Invalid Open-Meteo forecast base URL.")
-//            }
             self.client = DefaultAPIClient(baseURL: Self.baseURL)
         }
         self.now = now
