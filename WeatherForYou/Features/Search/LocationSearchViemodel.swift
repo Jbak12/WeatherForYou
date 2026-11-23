@@ -32,15 +32,6 @@ final class LocationSearchViemodel: ObservableObject {
     private var storedRecentLocations: [LocationDto] = []
     private var selectedLocation: LocationDto?
 
-    /// Creates a model backed by the default location repository.
-    ///
-    /// - Parameter debounce: How long to wait after the last keystroke before
-    ///   searching.
-    init(debounce: Duration = .milliseconds(300)) {
-        self.repository = DefaultLocationRepository()
-        self.debounce = debounce
-    }
-
     init(repository: LocationRepository, debounce: Duration = .milliseconds(300)) {
         self.repository = repository
         self.debounce = debounce

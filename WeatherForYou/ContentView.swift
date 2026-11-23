@@ -8,9 +8,15 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var model = LocationSearchViemodel()
+    @StateObject private var model: LocationSearchViemodel
     @State private var path: [LocationRoute] = []
     @State private var selectedRow: LocationRowModel?
+
+    init(locationRepository: LocationRepository) {
+        _model = StateObject(
+            wrappedValue: LocationSearchViemodel(repository: locationRepository)
+        )
+    }
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -56,6 +62,8 @@ struct ContentView: View {
     }
 }
 
-#Preview {
-    ContentView()
+#if DEBUG
+#Preview("Recent locations") {
+    ContentView(locationRepository: PreviewLocationRepository(recents: [.preview]))
 }
+#endif
