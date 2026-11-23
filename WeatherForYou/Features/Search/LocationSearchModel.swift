@@ -23,18 +23,21 @@ final class LocationSearchModel: ObservableObject {
     @Published private(set) var results: [Location] = []
     @Published private(set) var state: State = .idle
 
-    private let service: GeocodingService
+    private let repository: LocationRepository
     private let debounce: Duration
 
-    /// Creates a model backed by the live Open-Meteo geocoding service.
+    /// Creates a model backed by the default location repository.
+    ///
+    /// - Parameter debounce: How long to wait after the last keystroke before
+    ///   searching.
     init(debounce: Duration = .milliseconds(300)) {
-        self.service = OpenMeteoGeocodingService()
+        self.repository = DefaultLocationRepository()
         self.debounce = debounce
     }
 
-    /// Creates a model with an injected service, for previews and tests.
-    init(service: GeocodingService, debounce: Duration = .milliseconds(300)) {
-        self.service = service
+    /// Creates a model with an injected repository, for previews and tests.
+    init(repository: LocationRepository, debounce: Duration = .milliseconds(300)) {
+        self.repository = repository
         self.debounce = debounce
     }
 
@@ -62,7 +65,7 @@ final class LocationSearchModel: ObservableObject {
             // existing results stay visible during the debounce window.
             state = .loading
 
-            let locations = try await service.search(text)
+            let locations = try await repository.searchLocations(matching: text)
 
             // The query may have changed while the request was in flight.
             guard text == trimmedQuery else { return }

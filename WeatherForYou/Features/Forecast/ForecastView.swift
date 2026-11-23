@@ -14,9 +14,9 @@ struct ForecastView: View {
         _model = StateObject(wrappedValue: ForecastViewModel(location: location))
     }
 
-    init(location: Location, service: ForecastService) {
+    init(location: Location, repository: ForecastRepository) {
         _model = StateObject(
-            wrappedValue: ForecastViewModel(location: location, service: service)
+            wrappedValue: ForecastViewModel(location: location, repository: repository)
         )
     }
 
@@ -33,6 +33,6 @@ struct ForecastView: View {
 
 #Preview {
     NavigationStack {
-        ForecastView(location: .preview, service: PreviewForecastService())
+        ForecastView(location: .preview, repository: PreviewForecastRepository())
     }
 }

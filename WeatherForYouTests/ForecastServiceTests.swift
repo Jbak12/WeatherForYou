@@ -153,9 +153,9 @@ final class ForecastServiceTests: XCTestCase {
     // MARK: - View model
 
     func testViewModelReachesLoadedState() async {
-        let service = StubForecastService()
-        service.result = .preview
-        let model = ForecastViewModel(location: .preview, service: service)
+        let repository = StubForecastRepository()
+        repository.result = .preview
+        let model = ForecastViewModel(location: .preview, repository: repository)
 
         await model.load()
 
@@ -167,9 +167,9 @@ final class ForecastServiceTests: XCTestCase {
     }
 
     func testViewModelReachesFailedState() async {
-        let service = StubForecastService()
-        service.error = APIError.invalidResponse
-        let model = ForecastViewModel(location: .preview, service: service)
+        let repository = StubForecastRepository()
+        repository.error = APIError.invalidResponse
+        let model = ForecastViewModel(location: .preview, repository: repository)
 
         await model.load()
 
@@ -279,7 +279,7 @@ final class ForecastServiceTests: XCTestCase {
 }
 
 @MainActor
-private final class StubForecastService: ForecastService {
+private final class StubForecastRepository: ForecastRepository {
     var result: Forecast?
     var error: Error?
 

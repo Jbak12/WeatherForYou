@@ -37,7 +37,7 @@ struct ForecastContent: View {
     NavigationStack {
         ForecastContent()
             .environmentObject(
-                ForecastViewModel(location: .preview, service: PreviewForecastService())
+                ForecastViewModel(location: .preview, repository: PreviewForecastRepository())
             )
     }
 }

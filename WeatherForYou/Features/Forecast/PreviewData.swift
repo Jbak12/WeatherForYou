@@ -112,8 +112,8 @@ extension Forecast {
     }
 }
 
-/// A `ForecastService` that returns the sample forecast without networking.
-struct PreviewForecastService: ForecastService {
+/// A `ForecastRepository` that returns the sample forecast without networking.
+struct PreviewForecastRepository: ForecastRepository {
     func forecast(for location: Location) async throws -> Forecast {
         .preview
     }

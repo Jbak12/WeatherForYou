@@ -21,18 +21,18 @@ final class ForecastViewModel: ObservableObject {
     @Published private(set) var state: State = .idle
     let location: Location
 
-    private let service: ForecastService
+    private let repository: ForecastRepository
 
-    /// Creates a model backed by the live Open-Meteo forecast service.
+    /// Creates a model backed by the default forecast repository.
     init(location: Location) {
         self.location = location
-        self.service = OpenMeteoForecastService()
+        self.repository = DefaultForecastRepository()
     }
 
-    /// Creates a model with an injected service, for previews and tests.
-    init(location: Location, service: ForecastService) {
+    /// Creates a model with an injected repository, for previews and tests.
+    init(location: Location, repository: ForecastRepository) {
         self.location = location
-        self.service = service
+        self.repository = repository
     }
 
     func load() async {
@@ -41,7 +41,7 @@ final class ForecastViewModel: ObservableObject {
         state = .loading
 
         do {
-            let forecast = try await service.forecast(for: location)
+            let forecast = try await repository.forecast(for: location)
             state = .loaded(forecast)
         } catch is CancellationError {
             return

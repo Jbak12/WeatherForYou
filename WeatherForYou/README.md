@@ -1,5 +1,26 @@
 # WeatherForYou Project
 
+## Architecture
+
+Data flows in one direction:
+
+```
+Views → View Models → Repositories → Services (networking)
+```
+
+- **Views** render state and forward user actions.
+- **View models** (`ObservableObject` + `@Published`) own screen state.
+- **Repositories** (`LocationRepository`, `ForecastRepository`) define the data
+  the app needs, independent of where it comes from.
+- **Services** (`GeocodingService`, `ForecastService`) perform the HTTP work.
+
+View models depend only on repository protocols and default to the live
+implementations (`DefaultLocationRepository`, `DefaultForecastRepository`).
+Tests and previews inject stubs, so nothing in the UI layer changes when a new
+data source is added. The repository is the seam for a future SQLite/GRDB
+cache: persistence will be added inside the default repositories, not in the
+views or view models.
+
 ## Static URL macro
 
 The app uses a local Swift macro package, [`StaticURL`](../StaticURL), to validate

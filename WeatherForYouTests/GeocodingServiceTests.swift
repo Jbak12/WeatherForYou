@@ -163,7 +163,9 @@ final class GeocodingServiceTests: XCTestCase {
         let client = StubAPIClient()
         client.result = LocationSearchResponse()
         let model = LocationSearchModel(
-            service: OpenMeteoGeocodingService(client: client),
+            repository: DefaultLocationRepository(
+                service: OpenMeteoGeocodingService(client: client)
+            ),
             debounce: .zero
         )
 
@@ -179,7 +181,9 @@ final class GeocodingServiceTests: XCTestCase {
         let client = StubAPIClient()
         client.result = LocationSearchResponse()
         let model = LocationSearchModel(
-            service: OpenMeteoGeocodingService(client: client),
+            repository: DefaultLocationRepository(
+                service: OpenMeteoGeocodingService(client: client)
+            ),
             debounce: .zero
         )
 
