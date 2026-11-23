@@ -108,11 +108,19 @@ struct LocationSearchContent: View {
 
                     Spacer()
 
-                    Button("search.recents.clear") {
+                    Button {
                         Task { await viewModel.clearRecentLocations() }
+                    } label: {
+                        Label("search.recents.clear", systemImage: "trash")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(.primary)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(.primary.opacity(0.08), in: .capsule)
+                            .frame(minWidth: 44, minHeight: 44)
+                            .contentShape(.rect)
                     }
-                    .font(.footnote)
-                    .textCase(nil)
+                    .buttonStyle(.plain)
                     .accessibilityIdentifier("search.recents.clear")
                 }
             }
