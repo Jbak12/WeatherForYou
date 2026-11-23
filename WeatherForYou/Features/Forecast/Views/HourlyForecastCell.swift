@@ -33,5 +33,14 @@ struct HourlyForecastCell: View {
         .frame(width: 56)
         .padding(.vertical, 8)
     }
+}
 
+#Preview("With and without precipitation") {
+    HStack(spacing: 8) {
+        ForEach(ForecastDetailsModel.preview.hourly.prefix(2)) { entry in
+            HourlyForecastCell(model: entry)
+        }
+    }
+    .padding()
+    .background(.backgroundPrimary)
 }

@@ -41,7 +41,7 @@ struct ForecastView: View {
     }
 }
 
-#Preview {
+#Preview("Loaded forecast") {
     NavigationStack {
         ForecastView(
             coordinates: Coordinates(latitude: 52.52437, longitude: 13.41053),

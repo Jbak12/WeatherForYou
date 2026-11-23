@@ -36,5 +36,12 @@ struct CurrentConditionsView: View {
             .font(.subheadline)
         }
     }
+}
 
+#Preview("Current conditions") {
+    if let conditions = ForecastDetailsModel.preview.currentConditions {
+        CurrentConditionsView(model: conditions)
+            .padding()
+            .background(.backgroundPrimary)
+    }
 }

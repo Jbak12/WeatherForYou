@@ -51,5 +51,17 @@ struct ForecastHeaderView: View {
         .padding(8)
         .background(.thinMaterial, in: .rect(cornerRadius: 16))
     }
+}
 
+#Preview("Current weather") {
+    ForecastHeaderView(model: ForecastDetailsModel.preview.header)
+        .padding()
+        .background(.backgroundPrimary)
+}
+
+#Preview("Without current weather") {
+    let sample = ForecastDetailsModel.preview.header
+    ForecastHeaderView(model: ForecastHeaderModel(name: sample.name, subtitle: sample.subtitle, current: nil))
+        .padding()
+        .background(.backgroundPrimary)
 }

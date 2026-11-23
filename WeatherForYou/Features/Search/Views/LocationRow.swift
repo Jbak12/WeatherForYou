@@ -38,39 +38,10 @@ struct LocationRow: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        List {
-            LocationListRow(
-                model: LocationRowModel(
-                    location: LocationDto(
-                        id: 1,
-                        name: "Warsaw",
-                        latitude: 52.2297,
-                        longitude: 21.0122,
-                        elevation: 113,
-                        featureCode: "PPLC",
-                        countryCode: "PL",
-                        admin1Id: nil,
-                        admin2Id: nil,
-                        admin3Id: nil,
-                        admin4Id: nil,
-                        timezone: "Europe/Warsaw",
-                        population: 1_790_658,
-                        postcodes: nil,
-                        countryId: nil,
-                        country: "Poland",
-                        admin1: "Masovia",
-                        admin2: nil,
-                        admin3: nil,
-                        admin4: nil
-                    )
-                ),
-                onSelect: {}
-            )
-        }
-        .listStyle(.plain)
-        .scrollContentBackground(.hidden)
+#if DEBUG
+#Preview("Location card") {
+    LocationRow(model: LocationRowModel(location: .preview))
+        .padding()
         .background(.backgroundPrimary)
-    }
 }
+#endif

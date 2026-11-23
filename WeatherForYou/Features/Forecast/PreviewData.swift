@@ -115,6 +115,15 @@ extension Forecast {
     }
 }
 
+extension ForecastDetailsModel {
+    static var preview: ForecastDetailsModel {
+        let forecast = Forecast.preview
+        let location = LocationDto.preview
+        let mapper = ForecastPresentationMapper(locale: .current, now: forecast.current?.date ?? .now)
+        return mapper.map(forecast, name: location.name, subtitle: location.subtitle)
+    }
+}
+
 /// A `ForecastRepository` that returns the sample forecast without networking.
 struct PreviewForecastRepository: ForecastRepository {
     func forecast(at coordinates: Coordinates) async throws -> Forecast {
@@ -125,13 +134,15 @@ struct PreviewForecastRepository: ForecastRepository {
 /// A `LocationRepository` that serves sample data without networking or a database.
 final class PreviewLocationRepository: LocationRepository {
     private var recents: [LocationDto]
+    private let results: [LocationDto]
 
-    init(recents: [LocationDto] = [.preview]) {
+    init(recents: [LocationDto] = [.preview], results: [LocationDto] = [.preview]) {
         self.recents = recents
+        self.results = results
     }
 
     func searchLocations(matching query: String) async throws -> [LocationDto] {
-        query.isEmpty ? [] : [.preview]
+        query.isEmpty ? [] : results
     }
 
     func recentLocations(limit: Int) async throws -> [LocationDto] {

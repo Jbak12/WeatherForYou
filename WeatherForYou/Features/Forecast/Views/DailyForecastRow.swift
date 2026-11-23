@@ -37,5 +37,14 @@ struct DailyForecastRow: View {
         .font(.subheadline)
         .padding(.vertical, 8)
     }
+}
 
+#Preview("Today and tomorrow") {
+    VStack(spacing: 0) {
+        ForEach(ForecastDetailsModel.preview.daily.prefix(2)) { entry in
+            DailyForecastRow(model: entry)
+        }
+    }
+    .padding()
+    .background(.backgroundPrimary)
 }

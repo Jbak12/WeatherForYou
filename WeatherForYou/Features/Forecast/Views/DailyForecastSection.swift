@@ -29,3 +29,9 @@ struct DailyForecastSection: View {
         }
     }
 }
+
+#Preview("Daily forecast") {
+    DailyForecastSection(entries: ForecastDetailsModel.preview.daily)
+        .padding()
+        .background(.backgroundPrimary)
+}

@@ -36,7 +36,7 @@ struct ForecastContent: View {
     }
 }
 
-#Preview {
+#Preview("Loading") {
     NavigationStack {
         ForecastContent()
             .environmentObject(

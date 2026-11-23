@@ -29,8 +29,6 @@ struct ForecastDetailsView: View {
     }
 }
 
-#Preview {
-    let forecast = Forecast.preview
-    let mapper = ForecastPresentationMapper(locale: .current, now: forecast.current?.date ?? .now)
-    ForecastDetailsView(model: mapper.map(forecast, name: "Berlin", subtitle: "Land Berlin, Germany"))
+#Preview("Forecast details") {
+    ForecastDetailsView(model: .preview)
 }

@@ -30,3 +30,14 @@ struct LocationListRow: View {
         .listRowSeparator(.hidden)
     }
 }
+
+#if DEBUG
+#Preview("Location in a list") {
+    List {
+        LocationListRow(model: LocationRowModel(location: .preview), onSelect: {})
+    }
+    .listStyle(.plain)
+    .scrollContentBackground(.hidden)
+    .background(.backgroundPrimary)
+}
+#endif

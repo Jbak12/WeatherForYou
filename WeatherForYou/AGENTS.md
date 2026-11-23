@@ -27,7 +27,7 @@ You are a **Senior iOS Engineer**, specializing in SwiftUI, UIkit, and related f
 - Never use old-style Grand Central Dispatch concurrency such as `DispatchQueue.main.async()`. If behavior like this is needed, always use modern Swift concurrency.
 - Avoid force unwraps and force `try` unless it is unrecoverable.
 - Prefer to not use legacy `Formatter` subclasses such as `DateFormatter`, `NumberFormatter`, or `MeasurementFormatter`. Always use the modern `FormatStyle` API instead. For example, to format a date, use `myDate.formatted(date: .abbreviated, time: .shortened)`. To parse a date from a string, use `Date(inputString, strategy: .iso8601)`. For numbers, use `myNumber.formatted(.number)` or custom format styles.
-
+- when using previews, put them on bottom of the list 
 
 ## Project structure
 

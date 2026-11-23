@@ -27,3 +27,9 @@ struct HourlyForecastSection: View {
         }
     }
 }
+
+#Preview("Hourly forecast") {
+    HourlyForecastSection(entries: ForecastDetailsModel.preview.hourly)
+        .padding()
+        .background(.backgroundPrimary)
+}

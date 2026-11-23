@@ -93,11 +93,51 @@ struct LocationSearchContent: View {
     }
 }
 
-#Preview {
-    NavigationStack {
-        LocationSearchContent(
-            viewModel: LocationSearchViemodel(repository: PreviewLocationRepository()),
-            onSelect: { _ in }
+#if DEBUG
+private struct LocationSearchPreview: View {
+    @StateObject private var viewModel: LocationSearchViemodel
+
+    init(query: String = "", recents: [LocationDto] = [], results: [LocationDto] = [.preview]) {
+        _viewModel = StateObject(wrappedValue: Self.makeViewModel(query: query, recents: recents, results: results))
+    }
+
+    var body: some View {
+        NavigationStack {
+            LocationSearchContent(viewModel: viewModel, onSelect: { _ in })
+                .navigationTitle("search.title")
+                .searchable(
+                    text: $viewModel.query,
+                    placement: .navigationBarDrawer(displayMode: .always),
+                    prompt: Text("search.prompt")
+                )
+        }
+        .task { await viewModel.loadRecentLocations() }
+        .task(id: viewModel.query) { await viewModel.search() }
+    }
+
+    private static func makeViewModel(query: String, recents: [LocationDto], results: [LocationDto]) -> LocationSearchViemodel {
+        let model = LocationSearchViemodel(
+            repository: PreviewLocationRepository(recents: recents, results: results),
+            debounce: .zero
         )
+        model.query = query
+        return model
     }
 }
+
+#Preview("Idle") {
+    LocationSearchPreview()
+}
+
+#Preview("Recent locations") {
+    LocationSearchPreview(recents: [.preview])
+}
+
+#Preview("Search results") {
+    LocationSearchPreview(query: "Berlin")
+}
+
+#Preview("No results") {
+    LocationSearchPreview(query: "Unknown city", results: [])
+}
+#endif
