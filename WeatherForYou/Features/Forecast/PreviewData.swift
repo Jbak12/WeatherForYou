@@ -126,8 +126,11 @@ extension ForecastDetailsModel {
 
 /// A `ForecastRepository` that returns the sample forecast without networking.
 struct PreviewForecastRepository: ForecastRepository {
+    var delay: Duration = .zero
+
     func forecast(at coordinates: Coordinates) async throws -> Forecast {
-        .preview(at: .now)
+        try await Task.sleep(for: delay)
+        return .preview(at: .now)
     }
 }
 
