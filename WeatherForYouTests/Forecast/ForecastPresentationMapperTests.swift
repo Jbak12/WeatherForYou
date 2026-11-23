@@ -13,7 +13,7 @@ final class ForecastPresentationMapperTests: XCTestCase {
         XCTAssertEqual(model.header.current?.icon.accessibilityLabel, "Overcast")
         XCTAssertEqual(model.currentConditions?.wind, "11 km/h NW")
         XCTAssertEqual(model.hourly.first?.precipitation, "10%")
-        XCTAssertNil(model.hourly.dropFirst().first?.precipitation)
+        XCTAssertEqual(model.hourly.dropFirst().first?.precipitation, "0%")
     }
 
     func testTodayUsesForecastTimeZoneInsteadOfFirstRow() throws {
