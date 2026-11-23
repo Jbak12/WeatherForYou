@@ -61,7 +61,7 @@ struct RecentLocationRow: Codable, FetchableRecord, MutablePersistableRecord {
 }
 
 extension RecentLocationRow {
-    init(location: Location, lastViewedAt: Date) {
+    init(location: LocationDto, lastViewedAt: Date) {
         self.id = location.id
         self.name = location.name
         self.latitude = location.latitude
@@ -88,8 +88,8 @@ extension RecentLocationRow {
         self.lastViewedAt = lastViewedAt
     }
 
-    var location: Location {
-        Location(
+    var location: LocationDto {
+        LocationDto(
             id: id,
             name: name,
             latitude: latitude,

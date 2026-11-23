@@ -28,15 +28,15 @@ struct DefaultLocationRepository: LocationRepository {
         self.recentStore = recentStore
     }
 
-    func searchLocations(matching query: String) async throws -> [Location] {
+    func searchLocations(matching query: String) async throws -> [LocationDto] {
         try await service.search(query)
     }
 
-    func recentLocations(limit: Int) async throws -> [Location] {
+    func recentLocations(limit: Int) async throws -> [LocationDto] {
         try await recentStore.recentLocations(limit: limit)
     }
 
-    func recordView(of location: Location) async throws {
+    func recordView(of location: LocationDto) async throws {
         try await recentStore.record(location)
     }
 

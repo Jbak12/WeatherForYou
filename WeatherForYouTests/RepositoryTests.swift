@@ -91,7 +91,7 @@ final class RepositoryTests: XCTestCase {
 
 @MainActor
 private final class StubGeocodingService: GeocodingService {
-    var result: [Location] = []
+    var result: [LocationDto] = []
     var error: Error?
     private(set) var queries: [String] = []
 
@@ -100,7 +100,7 @@ private final class StubGeocodingService: GeocodingService {
         count: Int,
         language: String,
         countryCode: String?
-    ) async throws -> [Location] {
+    ) async throws -> [LocationDto] {
         queries.append(text)
 
         if let error {
@@ -115,9 +115,9 @@ private final class StubGeocodingService: GeocodingService {
 private final class StubForecastService: ForecastService {
     var result: Forecast?
     var error: Error?
-    private(set) var locations: [Location] = []
+    private(set) var locations: [LocationDto] = []
 
-    func forecast(for location: Location) async throws -> Forecast {
+    func forecast(for location: LocationDto) async throws -> Forecast {
         locations.append(location)
 
         if let error {

@@ -12,9 +12,9 @@ import Foundation
 /// The API omits `results` entirely when nothing matches, so decoding treats
 /// a missing key as an empty array.
 struct LocationSearchResponse: Decodable, Sendable {
-    let results: [Location]
+    let results: [LocationDto]
 
-    init(results: [Location] = []) {
+    init(results: [LocationDto] = []) {
         self.results = results
     }
 }
@@ -26,6 +26,6 @@ extension LocationSearchResponse {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        results = try container.decodeIfPresent([Location].self, forKey: .results) ?? []
+        results = try container.decodeIfPresent([LocationDto].self, forKey: .results) ?? []
     }
 }

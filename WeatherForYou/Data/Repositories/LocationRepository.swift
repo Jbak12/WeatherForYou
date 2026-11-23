@@ -14,13 +14,13 @@ import Foundation
 /// networking or persistence types.
 protocol LocationRepository {
     /// Returns locations matching `query`.
-    func searchLocations(matching query: String) async throws -> [Location]
+    func searchLocations(matching query: String) async throws -> [LocationDto]
 
     /// Returns the most recently viewed locations, newest first.
-    func recentLocations(limit: Int) async throws -> [Location]
+    func recentLocations(limit: Int) async throws -> [LocationDto]
 
     /// Records that the user viewed `location`, moving it to the top.
-    func recordView(of location: Location) async throws
+    func recordView(of location: LocationDto) async throws
 
     /// Removes a single location from the recents.
     func removeRecentLocation(id: Int) async throws

@@ -46,10 +46,8 @@ struct LocationSearchContent: View {
                 Button("Try Again", action: retry)
             }
         case .loaded:
-            List(model.results) { location in
-                NavigationLink(value: location) {
-                    LocationRow(location: location)
-                }
+            List(model.results) { row in
+                LocationListRow(model: row)
             }
             .listStyle(.plain)
             .scrollContentBackground(.hidden)
@@ -59,17 +57,15 @@ struct LocationSearchContent: View {
     private var recentList: some View {
         List {
             Section {
-                ForEach(model.recentLocations) { location in
-                    NavigationLink(value: location) {
-                        LocationRow(location: location)
-                    }
+                ForEach(model.recentLocations) { row in
+                    LocationListRow(model: row)
                 }
                 .onDelete { indexSet in
-                    let locations = indexSet.map { model.recentLocations[$0] }
+                    let rows = indexSet.map { model.recentLocations[$0] }
 
                     Task {
-                        for location in locations {
-                            await model.removeRecentLocation(location)
+                        for row in rows {
+                            await model.removeRecentLocation(row)
                         }
                     }
                 }

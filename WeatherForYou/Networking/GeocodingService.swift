@@ -22,13 +22,13 @@ protocol GeocodingService {
         count: Int,
         language: String,
         countryCode: String?
-    ) async throws -> [Location]
+    ) async throws -> [LocationDto]
 }
 
 extension GeocodingService {
     /// Searches with the API defaults: 10 results, the current language, and
     /// no country filter.
-    func search(_ text: String) async throws -> [Location] {
+    func search(_ text: String) async throws -> [LocationDto] {
         try await search(
             text,
             count: 10,

@@ -21,7 +21,7 @@ struct DefaultForecastRepository: ForecastRepository {
         self.service = service
     }
 
-    func forecast(for location: Location) async throws -> Forecast {
+    func forecast(for location: LocationDto) async throws -> Forecast {
         try await service.forecast(for: location)
     }
 }

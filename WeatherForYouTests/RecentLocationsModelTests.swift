@@ -18,7 +18,7 @@ final class RecentLocationsModelTests: XCTestCase {
 
         await model.loadRecentLocations()
 
-        XCTAssertEqual(model.recentLocations, [.preview])
+        XCTAssertEqual(model.recentLocations, [LocationRowModel(location: .preview)])
     }
 
     func testRemoveRecentLocationUpdatesListAndRepository() async {
@@ -27,11 +27,11 @@ final class RecentLocationsModelTests: XCTestCase {
         let model = makeModel(repository: repository)
         await model.loadRecentLocations()
 
-        await model.removeRecentLocation(.preview)
+        await model.removeRecentLocation(LocationRowModel(location: .preview))
 
         XCTAssertTrue(model.recentLocations.isEmpty)
         XCTAssertTrue(repository.recents.isEmpty)
-        XCTAssertEqual(repository.removedIDs, [Location.preview.id])
+        XCTAssertEqual(repository.removedIDs, [LocationDto.preview.id])
     }
 
     func testClearRecentLocationsUpdatesListAndRepository() async {

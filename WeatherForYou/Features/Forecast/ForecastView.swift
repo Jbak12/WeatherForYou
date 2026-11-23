@@ -10,12 +10,12 @@ import SwiftUI
 struct ForecastView: View {
     @StateObject private var model: ForecastViewModel
 
-    init(location: Location) {
+    init(location: LocationDto) {
         _model = StateObject(wrappedValue: ForecastViewModel(location: location))
     }
 
     init(
-        location: Location,
+        location: LocationDto,
         repository: ForecastRepository,
         locationRepository: LocationRepository
     ) {

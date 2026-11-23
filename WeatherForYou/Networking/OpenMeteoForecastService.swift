@@ -59,7 +59,7 @@ struct OpenMeteoForecastService: ForecastService {
         self.now = now
     }
 
-    func forecast(for location: Location) async throws -> Forecast {
+    func forecast(for location: LocationDto) async throws -> Forecast {
         let request = APIRequest(
             path: "/v1/forecast",
             queryItems: [

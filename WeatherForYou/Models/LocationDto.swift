@@ -1,5 +1,5 @@
 //
-//  Location.swift
+//  LocationDto.swift
 //  WeatherForYou
 //
 //  Created by Jakub Bakalarz on 22/11/2026.
@@ -11,7 +11,7 @@ import Foundation
 ///
 /// Fields the API can omit are modeled as optionals. The API documentation
 /// states that empty fields are not returned, so a missing key is expected.
-struct Location: Codable, Sendable, Identifiable, Equatable, Hashable {
+struct LocationDto: Codable, Sendable, Identifiable, Equatable, Hashable {
     let id: Int
     let name: String
     let latitude: Double
@@ -57,7 +57,7 @@ struct Location: Codable, Sendable, Identifiable, Equatable, Hashable {
     }
 }
 
-extension Location {
+extension LocationDto {
     /// A short "region, country" description suitable for a list row.
     var subtitle: String {
         [admin1, country]

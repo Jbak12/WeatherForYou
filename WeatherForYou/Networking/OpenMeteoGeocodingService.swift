@@ -30,7 +30,7 @@ struct OpenMeteoGeocodingService: GeocodingService {
         count: Int,
         language: String,
         countryCode: String?
-    ) async throws -> [Location] {
+    ) async throws -> [LocationDto] {
         let name = text.trimmingCharacters(in: .whitespacesAndNewlines)
 
         // The API treats empty and single-character searches as having no

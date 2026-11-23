@@ -8,9 +8,9 @@
 #if DEBUG
 import Foundation
 
-extension Location {
+extension LocationDto {
     /// A fixed location used by SwiftUI previews.
-    static let preview = Location(
+    static let preview = LocationDto(
         id: 2_950_159,
         name: "Berlin",
         latitude: 52.52437,
@@ -114,28 +114,28 @@ extension Forecast {
 
 /// A `ForecastRepository` that returns the sample forecast without networking.
 struct PreviewForecastRepository: ForecastRepository {
-    func forecast(for location: Location) async throws -> Forecast {
+    func forecast(for location: LocationDto) async throws -> Forecast {
         .preview
     }
 }
 
 /// A `LocationRepository` that serves sample data without networking or a database.
 final class PreviewLocationRepository: LocationRepository {
-    private var recents: [Location]
+    private var recents: [LocationDto]
 
-    init(recents: [Location] = [.preview]) {
+    init(recents: [LocationDto] = [.preview]) {
         self.recents = recents
     }
 
-    func searchLocations(matching query: String) async throws -> [Location] {
+    func searchLocations(matching query: String) async throws -> [LocationDto] {
         query.isEmpty ? [] : [.preview]
     }
 
-    func recentLocations(limit: Int) async throws -> [Location] {
+    func recentLocations(limit: Int) async throws -> [LocationDto] {
         Array(recents.prefix(limit))
     }
 
-    func recordView(of location: Location) async throws {
+    func recordView(of location: LocationDto) async throws {
         recents.removeAll { $0.id == location.id }
         recents.insert(location, at: 0)
     }

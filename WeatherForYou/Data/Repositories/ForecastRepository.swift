@@ -13,5 +13,5 @@ import Foundation
 /// caching or persistence can be added later without touching the UI layer.
 protocol ForecastRepository {
     /// Returns the forecast for `location`.
-    func forecast(for location: Location) async throws -> Forecast
+    func forecast(for location: LocationDto) async throws -> Forecast
 }

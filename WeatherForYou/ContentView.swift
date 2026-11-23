@@ -20,7 +20,7 @@ struct ContentView: View {
                     placement: .navigationBarDrawer(displayMode: .always),
                     prompt: "Search cities"
                 )
-                .navigationDestination(for: Location.self) { location in
+                .navigationDestination(for: LocationDto.self) { location in
                     ForecastView(location: location)
                 }
         }

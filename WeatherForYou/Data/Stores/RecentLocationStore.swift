@@ -13,10 +13,10 @@ import Foundation
 /// through GRDB, and other local features can follow the same pattern.
 protocol RecentLocationStore {
     /// Returns the most recently viewed locations, newest first.
-    func recentLocations(limit: Int) async throws -> [Location]
+    func recentLocations(limit: Int) async throws -> [LocationDto]
 
     /// Records that the user viewed `location`, moving it to the top.
-    func record(_ location: Location) async throws
+    func record(_ location: LocationDto) async throws
 
     /// Removes a single location from the recents.
     func remove(locationID: Int) async throws

@@ -19,13 +19,13 @@ final class ForecastViewModel: ObservableObject {
     }
 
     @Published private(set) var state: State = .idle
-    let location: Location
+    let location: LocationDto
 
     private let repository: ForecastRepository
     private let locationRepository: LocationRepository
 
     /// Creates a model backed by the default repositories.
-    init(location: Location) {
+    init(location: LocationDto) {
         self.location = location
         self.repository = DefaultForecastRepository()
         self.locationRepository = DefaultLocationRepository()
@@ -33,7 +33,7 @@ final class ForecastViewModel: ObservableObject {
 
     /// Creates a model with injected dependencies, for previews and tests.
     init(
-        location: Location,
+        location: LocationDto,
         repository: ForecastRepository,
         locationRepository: LocationRepository
     ) {

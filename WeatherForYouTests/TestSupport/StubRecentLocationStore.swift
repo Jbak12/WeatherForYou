@@ -10,17 +10,17 @@ import Foundation
 
 @MainActor
 final class StubRecentLocationStore: RecentLocationStore {
-    var locations: [Location] = []
+    var locations: [LocationDto] = []
     var error: Error?
-    private(set) var recorded: [Location] = []
+    private(set) var recorded: [LocationDto] = []
     private(set) var removedIDs: [Int] = []
 
-    func recentLocations(limit: Int) async throws -> [Location] {
+    func recentLocations(limit: Int) async throws -> [LocationDto] {
         if let error { throw error }
         return Array(locations.prefix(limit))
     }
 
-    func record(_ location: Location) async throws {
+    func record(_ location: LocationDto) async throws {
         if let error { throw error }
         recorded.append(location)
     }

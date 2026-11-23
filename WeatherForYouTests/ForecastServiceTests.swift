@@ -321,7 +321,7 @@ private final class StubForecastRepository: ForecastRepository {
     var result: Forecast?
     var error: Error?
 
-    func forecast(for location: Location) async throws -> Forecast {
+    func forecast(for location: LocationDto) async throws -> Forecast {
         if let error {
             throw error
         }

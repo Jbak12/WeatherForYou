@@ -94,8 +94,8 @@ final class RecentLocationStoreTests: XCTestCase {
         id: Int,
         name: String,
         postcodes: [String]? = nil
-    ) -> Location {
-        Location(
+    ) -> LocationDto {
+        LocationDto(
             id: id,
             name: name,
             latitude: 52.2297,

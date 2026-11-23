@@ -10,23 +10,23 @@ import Foundation
 
 @MainActor
 final class StubLocationRepository: LocationRepository {
-    var searchResults: [Location] = []
-    var recents: [Location] = []
+    var searchResults: [LocationDto] = []
+    var recents: [LocationDto] = []
     var error: Error?
-    private(set) var recorded: [Location] = []
+    private(set) var recorded: [LocationDto] = []
     private(set) var removedIDs: [Int] = []
 
-    func searchLocations(matching query: String) async throws -> [Location] {
+    func searchLocations(matching query: String) async throws -> [LocationDto] {
         if let error { throw error }
         return searchResults
     }
 
-    func recentLocations(limit: Int) async throws -> [Location] {
+    func recentLocations(limit: Int) async throws -> [LocationDto] {
         if let error { throw error }
         return Array(recents.prefix(limit))
     }
 
-    func recordView(of location: Location) async throws {
+    func recordView(of location: LocationDto) async throws {
         if let error { throw error }
         recorded.append(location)
     }

@@ -20,9 +20,9 @@ final class LocationSearchModel: ObservableObject {
     }
 
     @Published var query = ""
-    @Published private(set) var results: [Location] = []
+    @Published private(set) var results: [LocationRowModel] = []
     @Published private(set) var state: State = .idle
-    @Published private(set) var recentLocations: [Location] = []
+    @Published private(set) var recentLocations: [LocationRowModel] = []
 
     private static let recentLimit = 10
 
@@ -49,16 +49,18 @@ final class LocationSearchModel: ObservableObject {
 
     /// Reloads the recently viewed locations.
     func loadRecentLocations() async {
-        recentLocations = (try? await repository.recentLocations(
+        let locations = (try? await repository.recentLocations(
             limit: Self.recentLimit
         )) ?? []
+
+        recentLocations = locations.map { LocationRowModel(location: $0) }
     }
 
     /// Removes a single location from the recents.
-    func removeRecentLocation(_ location: Location) async {
+    func removeRecentLocation(_ row: LocationRowModel) async {
         do {
-            try await repository.removeRecentLocation(id: location.id)
-            recentLocations.removeAll { $0.id == location.id }
+            try await repository.removeRecentLocation(id: row.id)
+            recentLocations.removeAll { $0.id == row.id }
         } catch {
             // Keep the row visible when the deletion fails.
         }
@@ -99,7 +101,7 @@ final class LocationSearchModel: ObservableObject {
             // The query may have changed while the request was in flight.
             guard text == trimmedQuery else { return }
 
-            results = locations
+            results = locations.map { LocationRowModel(location: $0) }
             state = locations.isEmpty ? .empty : .loaded
         } catch is CancellationError {
             return

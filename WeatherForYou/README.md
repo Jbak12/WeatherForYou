@@ -24,6 +24,14 @@ data source is added. For example, `DefaultLocationRepository` combines
 `GeocodingService` for search with `RecentLocationStore` for history, and view
 models never see either type.
 
+### Models
+
+- **DTOs** (`LocationDto`) mirror the API payload and are used by services,
+  repositories, and stores.
+- **Presentation models** (`LocationRowModel`) expose only what a view renders,
+  with strings already formatted. View models build them, so views stay free of
+  formatting logic.
+
 ## Persistence (GRDB)
 
 Recents are stored in SQLite through [GRDB](https://github.com/groue/GRDB.swift).

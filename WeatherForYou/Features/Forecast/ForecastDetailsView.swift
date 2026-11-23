@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ForecastDetailsView: View {
-    let location: Location
+    let location: LocationDto
     let forecast: Forecast
 
     var body: some View {

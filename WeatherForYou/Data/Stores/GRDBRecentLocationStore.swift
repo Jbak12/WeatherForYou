@@ -22,7 +22,7 @@ struct GRDBRecentLocationStore: RecentLocationStore {
         self.now = now
     }
 
-    func recentLocations(limit: Int) async throws -> [Location] {
+    func recentLocations(limit: Int) async throws -> [LocationDto] {
         guard let database else { return [] }
 
         return try await database.writer.read { db in
@@ -34,7 +34,7 @@ struct GRDBRecentLocationStore: RecentLocationStore {
         }
     }
 
-    func record(_ location: Location) async throws {
+    func record(_ location: LocationDto) async throws {
         guard let database else { return }
 
         let row = RecentLocationRow(location: location, lastViewedAt: now())

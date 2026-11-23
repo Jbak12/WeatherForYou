@@ -8,27 +8,25 @@
 import SwiftUI
 
 struct LocationRow: View {
-    let location: Location
+    let model: LocationRowModel
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(location.name)
+            Text(model.name)
                 .font(.headline)
 
-            if !location.subtitle.isEmpty {
-                Text(location.subtitle)
+            if let subtitle = model.subtitle {
+                Text(subtitle)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
 
-            Text(
-                "\(location.latitude, format: .number.precision(.fractionLength(4))), \(location.longitude, format: .number.precision(.fractionLength(4)))"
-            )
-            .font(.caption)
-            .monospaced()
-            .foregroundStyle(.secondary)
+            Text(model.coordinates)
+                .font(.caption)
+                .monospaced()
+                .foregroundStyle(.secondary)
 
-            if let timezone = location.timezone {
+            if let timezone = model.timezone {
                 Text(timezone)
                     .font(.caption2)
                     .foregroundStyle(.tertiary)
@@ -36,38 +34,42 @@ struct LocationRow: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(12)
-        .background(.backgroundSecondary, in: .rect(cornerRadius: 12))
-        .listRowBackground(Color.clear)
-        .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
-        .listRowSeparator(.hidden)
+        .background(.thinMaterial, in: .rect(cornerRadius: 12))
     }
 }
 
 #Preview {
-    List {
-        LocationRow(
-            location: Location(
-                id: 1,
-                name: "Warsaw",
-                latitude: 52.2297,
-                longitude: 21.0122,
-                elevation: 113,
-                featureCode: "PPLC",
-                countryCode: "PL",
-                admin1Id: nil,
-                admin2Id: nil,
-                admin3Id: nil,
-                admin4Id: nil,
-                timezone: "Europe/Warsaw",
-                population: 1_790_658,
-                postcodes: nil,
-                countryId: nil,
-                country: "Poland",
-                admin1: "Masovia",
-                admin2: nil,
-                admin3: nil,
-                admin4: nil
+    NavigationStack {
+        List {
+            LocationListRow(
+                model: LocationRowModel(
+                    location: LocationDto(
+                        id: 1,
+                        name: "Warsaw",
+                        latitude: 52.2297,
+                        longitude: 21.0122,
+                        elevation: 113,
+                        featureCode: "PPLC",
+                        countryCode: "PL",
+                        admin1Id: nil,
+                        admin2Id: nil,
+                        admin3Id: nil,
+                        admin4Id: nil,
+                        timezone: "Europe/Warsaw",
+                        population: 1_790_658,
+                        postcodes: nil,
+                        countryId: nil,
+                        country: "Poland",
+                        admin1: "Masovia",
+                        admin2: nil,
+                        admin3: nil,
+                        admin4: nil
+                    )
+                )
             )
-        )
+        }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(.backgroundPrimary)
     }
 }
