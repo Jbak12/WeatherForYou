@@ -17,14 +17,14 @@ struct ForecastPresentationMapper {
         return ForecastDetailsModel(
             header: ForecastHeaderModel(name: name, subtitle: subtitle, current: forecast.current.map { current in
                 ForecastHeaderModel.Current(
-                    temperature: number(current.temperature) + units.temperature,
+                    temperature: degrees(current.temperature) + units.temperature,
                     feelsLike: current.apparentTemperature.map { apparent in
-                        let temperature = number(apparent) + units.temperature
+                        let temperature = degrees(apparent) + units.temperature
                         return localized(LocalizedStringResource("forecast.feels_like", defaultValue: "Feels like \(temperature)"))
                     },
                     highLow: today.map { day in
-                        let high = number(day.temperatureMax) + units.temperature
-                        let low = number(day.temperatureMin) + units.temperature
+                        let high = degrees(day.temperatureMax) + units.temperature
+                        let low = degrees(day.temperatureMin) + units.temperature
                         return localized(LocalizedStringResource("forecast.high_low", defaultValue: "H: \(high)   L: \(low)"))
                     },
                     icon: icon(for: current.weatherCode, isDay: current.isDay)
@@ -35,7 +35,7 @@ struct ForecastPresentationMapper {
                 HourlyForecastCellModel(
                     id: entry.id,
                     time: entry.date.formatted(hourFormat),
-                    temperature: number(entry.temperature) + "°",
+                    temperature: degrees(entry.temperature) + "°",
                     precipitation: probability(entry.precipitationProbability),
                     icon: icon(for: entry.weatherCode, isDay: entry.isDay)
                 )
@@ -46,8 +46,8 @@ struct ForecastPresentationMapper {
                     id: entry.id,
                     day: isToday ? localized("forecast.daily.today") : entry.date.formatted(dayFormat),
                     isToday: isToday,
-                    minimumTemperature: number(entry.temperatureMin) + "°",
-                    maximumTemperature: number(entry.temperatureMax) + "°",
+                    minimumTemperature: degrees(entry.temperatureMin) + "°",
+                    maximumTemperature: degrees(entry.temperatureMax) + "°",
                     precipitation: probability(entry.precipitationProbabilityMax),
                     icon: icon(for: entry.weatherCode, isDay: true)
                 )
@@ -70,6 +70,11 @@ struct ForecastPresentationMapper {
             gusts: current.windGusts.map { "\(number($0)) \(units.windSpeed)" } ?? unavailable,
             precipitation: current.precipitation.map { "\(number($0, digits: 1)) \(units.precipitation)" } ?? unavailable
         )
+    }
+
+    private func degrees(_ value: Double) -> String {
+        let rounded = value.rounded(.toNearestOrEven)
+        return number(rounded == 0 ? 0 : rounded)
     }
 
     private func number(_ value: Double, digits: Int = 0) -> String {

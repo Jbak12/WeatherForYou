@@ -27,6 +27,22 @@ final class ForecastPresentationMapperTests: XCTestCase {
         XCTAssertEqual(model.header.current?.highLow, "H: 8°C   L: 2°C")
     }
 
+    func testWholeDegreesDropMinusSignOnlyWhenRoundedToZero() {
+        let now = Date(timeIntervalSince1970: 1_795_380_300)
+        let hourly = [-0.2, -0.0, -0.6].enumerated().map { index, temperature in
+            let date = now.addingTimeInterval(Double(index) * 3_600)
+            return Forecast.HourlyEntry(
+                id: date, date: date, temperature: temperature, weatherCode: .clearSky,
+                precipitationProbability: nil, windSpeed: nil, isDay: true
+            )
+        }
+        let forecast = Forecast(
+            timeZone: .gmt, current: nil, hourly: hourly, daily: [], units: Forecast.preview.units
+        )
+
+        XCTAssertEqual(map(forecast, now: now).hourly.map(\.temperature), ["0°", "0°", "-1°"])
+    }
+
     func testFormatsMeasurementsUsingSuppliedLocale() throws {
         let forecast = Forecast.preview
         let now = try XCTUnwrap(forecast.current?.date)
