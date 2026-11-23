@@ -11,9 +11,6 @@ protocol APIClient {
     func send<T: Decodable>(
         _ request: APIRequest
     ) async throws -> T
-
-    /// Sends a request whose response body is irrelevant (e.g. 204 No Content).
-    func send(_ request: APIRequest) async throws
 }
 
 struct APIRequest {

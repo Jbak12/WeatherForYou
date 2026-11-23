@@ -26,7 +26,7 @@ final class DefaultAPIClient: APIClient {
     func send<T: Decodable>(
         _ request: APIRequest
     ) async throws -> T {
-        let (data, _) = try await execute(request)
+        let data = try await execute(request)
 
         guard !data.isEmpty else {
             throw APIError.emptyResponse
@@ -38,17 +38,13 @@ final class DefaultAPIClient: APIClient {
             throw APIError.decodingFailed(underlying: error, body: data)
         }
     }
-
-    func send(_ request: APIRequest) async throws {
-        _ = try await execute(request)
-    }
 }
 
 private extension DefaultAPIClient {
 
     func execute(
         _ request: APIRequest
-    ) async throws -> (Data, HTTPURLResponse) {
+    ) async throws -> Data {
         let urlRequest = try makeURLRequest(from: request)
 
         let data: Data
@@ -72,7 +68,7 @@ private extension DefaultAPIClient {
             )
         }
 
-        return (data, httpResponse)
+        return data
     }
 
     func makeURLRequest(from request: APIRequest) throws -> URLRequest {

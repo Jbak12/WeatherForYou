@@ -28,12 +28,4 @@ final class StubAPIClient: APIClient {
 
         return result
     }
-
-    func send(_ request: APIRequest) async throws {
-        requests.append(request)
-
-        if let error {
-            throw error
-        }
-    }
 }
