@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LocationSearchContent: View {
-    @ObservedObject var viewModel: LocationSearchViemodel
+    @ObservedObject var viewModel: LocationSearchViewModel
     let onSelect: (LocationRowModel) -> Void
 
     var body: some View {
@@ -138,7 +138,7 @@ struct LocationSearchContent: View {
 
 #if DEBUG
 private struct LocationSearchPreview: View {
-    @StateObject private var viewModel: LocationSearchViemodel
+    @StateObject private var viewModel: LocationSearchViewModel
 
     init(query: String = "", recents: [LocationDto] = [], results: [LocationDto] = [.preview]) {
         _viewModel = StateObject(wrappedValue: Self.makeViewModel(query: query, recents: recents, results: results))
@@ -158,8 +158,8 @@ private struct LocationSearchPreview: View {
         .task(id: viewModel.query) { await viewModel.search() }
     }
 
-    private static func makeViewModel(query: String, recents: [LocationDto], results: [LocationDto]) -> LocationSearchViemodel {
-        let model = LocationSearchViemodel(
+    private static func makeViewModel(query: String, recents: [LocationDto], results: [LocationDto]) -> LocationSearchViewModel {
+        let model = LocationSearchViewModel(
             repository: PreviewLocationRepository(recents: recents, results: results),
             debounce: .zero
         )

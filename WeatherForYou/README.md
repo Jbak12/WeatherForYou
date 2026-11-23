@@ -10,6 +10,19 @@ are displayed as supplied by the service.
 
 ## Architecture
 
+The app is organized by feature within one Xcode target:
+
+- `App/` owns the entry point, root navigation, and live dependency wiring.
+- `Features/Locations/` owns Search and Recents, including geocoding and the
+  recent-location store.
+- `Features/Forecast/` owns forecast loading, normalization, and presentation.
+- `Shared/` contains the HTTP client, app database setup, and types used by
+  multiple features, such as `Coordinates`.
+
+Each feature keeps its data access code in `Data/` and its preview fixtures
+alongside the feature. Unit tests follow the same Locations, Forecast, and
+Shared grouping.
+
 Data flows in one direction:
 
 ```
@@ -25,10 +38,10 @@ Views → View Models → Repositories → Services (networking)
 - **Services** (`GeocodingService`, `ForecastService`) perform the HTTP work.
 - **Stores** (`RecentLocationStore`) own local persistence.
 
-View models depend only on repository protocols and default to the live
-implementations (`DefaultLocationRepository`, `DefaultForecastRepository`).
-Tests and previews inject stubs, so nothing in the UI layer changes when a new
-data source is added. For example, `DefaultLocationRepository` combines
+View models depend only on repository protocols. The app supplies the live
+location repository, and the forecast screen uses the live forecast repository
+unless a caller injects one. Tests and previews can substitute stubs. For
+example, `DefaultLocationRepository` combines
 `GeocodingService` for search with `RecentLocationStore` for history, and view
 models never see either type.
 
@@ -42,7 +55,7 @@ models never see either type.
 
 ### Forecast data flow
 
-`ForecastResponse` mirrors Open-Meteo's JSON. The forecast service converts it
+`ForecastDto` mirrors Open-Meteo's JSON. The forecast service converts it
 to `Forecast`, a typed model with dates, weather codes, and units. The repository
 returns that model without display formatting.
 
@@ -83,7 +96,8 @@ API fields without discarding existing history.
 
 View models depend on `LocationRepository`, not on GRDB or `RecentLocationStore`.
 `DefaultLocationRepository` composes the geocoding service with the store, and
-`GRDBRecentLocationStore` is the only type that imports GRDB for persistence.
+`GRDBRecentLocationStore` handles Recents queries and writes; `AppDatabase`
+opens and migrates the shared database.
 `AppDatabase.inMemory()` lets tests and previews run against a throwaway
 database.
 

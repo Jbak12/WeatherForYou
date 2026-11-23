@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var locationSearchViewModel: LocationSearchViemodel
+    @StateObject private var locationSearchViewModel: LocationSearchViewModel
     @State private var path: [LocationRoute] = []
     @State private var selectedRow: LocationRowModel?
 
     init(locationRepository: LocationRepository) {
         _locationSearchViewModel = StateObject(
-            wrappedValue: LocationSearchViemodel(repository: locationRepository)
+            wrappedValue: LocationSearchViewModel(repository: locationRepository)
         )
     }
 

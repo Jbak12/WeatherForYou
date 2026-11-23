@@ -71,7 +71,7 @@ final class RecentLocationsModelTests: XCTestCase {
     func testSearchSelectionRecorderSurvivesResultsBeingCleared() async {
         let repository = StubLocationRepository()
         repository.searchResults = [.preview]
-        let model = LocationSearchViemodel(repository: repository, debounce: .zero)
+        let model = LocationSearchViewModel(repository: repository, debounce: .zero)
         model.query = "Berlin"
         await model.search()
 
@@ -89,7 +89,7 @@ final class RecentLocationsModelTests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func makeModel(repository: StubLocationRepository) -> LocationSearchViemodel {
-        LocationSearchViemodel(repository: repository)
+    private func makeModel(repository: StubLocationRepository) -> LocationSearchViewModel {
+        LocationSearchViewModel(repository: repository)
     }
 }

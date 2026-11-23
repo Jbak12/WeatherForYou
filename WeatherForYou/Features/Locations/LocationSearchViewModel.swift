@@ -1,5 +1,5 @@
 //
-//  LocationSearchModel.swift
+//  LocationSearchViewModel.swift
 //  WeatherForYou
 //
 //  Created by Jakub Bakalarz on 22/11/2026.
@@ -10,7 +10,7 @@ import Combine
 
 /// Drives the location search screen: owns the query, results, and load state.
 @MainActor
-final class LocationSearchViemodel: ObservableObject {
+final class LocationSearchViewModel: ObservableObject {
     enum State: Equatable {
         case idle
         case loading

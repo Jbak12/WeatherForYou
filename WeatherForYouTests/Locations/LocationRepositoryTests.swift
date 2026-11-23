@@ -1,5 +1,5 @@
 //
-//  RepositoryTests.swift
+//  LocationRepositoryTests.swift
 //  WeatherForYouTests
 //
 //  Created by Jakub Bakalarz on 23/11/2026.
@@ -9,10 +9,7 @@ import XCTest
 @testable import WeatherForYou
 
 @MainActor
-final class RepositoryTests: XCTestCase {
-
-    // MARK: - Location
-
+final class LocationRepositoryTests: XCTestCase {
     func testLocationRepositoryForwardsQueryToService() async throws {
         let service = StubGeocodingService()
         service.result = [.preview]
@@ -61,33 +58,6 @@ final class RepositoryTests: XCTestCase {
         XCTAssertEqual(store.removedIDs, [1])
         XCTAssertTrue(store.locations.isEmpty)
     }
-
-    // MARK: - Forecast
-
-    func testForecastRepositoryForwardsCoordinatesToService() async throws {
-        let service = StubForecastService()
-        service.result = .preview
-        let repository = DefaultForecastRepository(service: service)
-
-        let coordinates = Coordinates(latitude: 52.52437, longitude: 13.41053)
-        let forecast = try await repository.forecast(at: coordinates)
-
-        XCTAssertEqual(service.requests, [coordinates])
-        XCTAssertEqual(forecast, .preview)
-    }
-
-    func testForecastRepositoryPropagatesServiceError() async {
-        let service = StubForecastService()
-        service.error = APIError.invalidResponse
-        let repository = DefaultForecastRepository(service: service)
-
-        do {
-            _ = try await repository.forecast(at: Coordinates(latitude: 52.52437, longitude: 13.41053))
-            XCTFail("Expected the service error to be rethrown.")
-        } catch {
-            XCTAssertTrue(error is APIError)
-        }
-    }
 }
 
 @MainActor
@@ -106,27 +76,6 @@ private final class StubGeocodingService: GeocodingService {
 
         if let error {
             throw error
-        }
-
-        return result
-    }
-}
-
-@MainActor
-private final class StubForecastService: ForecastService {
-    var result: Forecast?
-    var error: Error?
-    private(set) var requests: [Coordinates] = []
-
-    func forecast(at coordinates: Coordinates) async throws -> Forecast {
-        requests.append(coordinates)
-
-        if let error {
-            throw error
-        }
-
-        guard let result else {
-            throw APIError.emptyResponse
         }
 
         return result
