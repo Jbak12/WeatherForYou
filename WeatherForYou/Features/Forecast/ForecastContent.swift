@@ -17,6 +17,7 @@ struct ForecastContent: View {
         case .idle, .loading:
             ProgressView("forecast.loading")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(.backgroundPrimary)
         case let .failed(message):
             ContentUnavailableView {
                 Label("forecast.error.title", systemImage: "exclamationmark.triangle")
@@ -25,6 +26,8 @@ struct ForecastContent: View {
             } actions: {
                 Button("action.retry", action: retry)
             }
+            .background(.backgroundPrimary)
+
         case let .loaded(forecast):
             ForecastDetailsView(name: name, subtitle: subtitle, forecast: forecast)
         }

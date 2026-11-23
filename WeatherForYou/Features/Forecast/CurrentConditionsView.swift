@@ -36,8 +36,6 @@ struct CurrentConditionsView: View {
             }
             .font(.subheadline)
         }
-//        .padding()
-//        .background(.thinMaterial, in: .rect(cornerRadius: 16))
     }
 
     private var humidityText: String {
