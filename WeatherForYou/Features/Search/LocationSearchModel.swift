@@ -27,7 +27,6 @@ final class LocationSearchModel: ObservableObject {
     private static let recentLimit = 10
 
     private let repository: LocationRepository
-    private let recentStore: RecentLocationStore
     private let debounce: Duration
 
     /// Creates a model backed by the default location repository.
@@ -36,18 +35,11 @@ final class LocationSearchModel: ObservableObject {
     ///   searching.
     init(debounce: Duration = .milliseconds(300)) {
         self.repository = DefaultLocationRepository()
-        self.recentStore = GRDBRecentLocationStore.live
         self.debounce = debounce
     }
 
-    /// Creates a model with injected dependencies, for previews and tests.
-    init(
-        repository: LocationRepository,
-        recentStore: RecentLocationStore,
-        debounce: Duration = .milliseconds(300)
-    ) {
+    init(repository: LocationRepository, debounce: Duration = .milliseconds(300)) {
         self.repository = repository
-        self.recentStore = recentStore
         self.debounce = debounce
     }
 
@@ -57,7 +49,7 @@ final class LocationSearchModel: ObservableObject {
 
     /// Reloads the recently viewed locations.
     func loadRecentLocations() async {
-        recentLocations = (try? await recentStore.recentLocations(
+        recentLocations = (try? await repository.recentLocations(
             limit: Self.recentLimit
         )) ?? []
     }
@@ -65,7 +57,7 @@ final class LocationSearchModel: ObservableObject {
     /// Removes a single location from the recents.
     func removeRecentLocation(_ location: Location) async {
         do {
-            try await recentStore.remove(locationID: location.id)
+            try await repository.removeRecentLocation(id: location.id)
             recentLocations.removeAll { $0.id == location.id }
         } catch {
             // Keep the row visible when the deletion fails.
@@ -75,7 +67,7 @@ final class LocationSearchModel: ObservableObject {
     /// Removes every recent location.
     func clearRecentLocations() async {
         do {
-            try await recentStore.clear()
+            try await repository.clearRecentLocations()
             recentLocations = []
         } catch {
             // Keep the rows visible when the deletion fails.

@@ -164,9 +164,9 @@ final class GeocodingServiceTests: XCTestCase {
         client.result = LocationSearchResponse()
         let model = LocationSearchModel(
             repository: DefaultLocationRepository(
-                service: OpenMeteoGeocodingService(client: client)
+                service: OpenMeteoGeocodingService(client: client),
+                recentStore: StubRecentLocationStore()
             ),
-            recentStore: StubRecentLocationStore(),
             debounce: .zero
         )
 
@@ -183,9 +183,9 @@ final class GeocodingServiceTests: XCTestCase {
         client.result = LocationSearchResponse()
         let model = LocationSearchModel(
             repository: DefaultLocationRepository(
-                service: OpenMeteoGeocodingService(client: client)
+                service: OpenMeteoGeocodingService(client: client),
+                recentStore: StubRecentLocationStore()
             ),
-            recentStore: StubRecentLocationStore(),
             debounce: .zero
         )
 

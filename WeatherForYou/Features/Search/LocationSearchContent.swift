@@ -99,10 +99,7 @@ struct LocationSearchContent: View {
 #Preview {
     NavigationStack {
         LocationSearchContent(
-            model: LocationSearchModel(
-                repository: PreviewLocationRepository(),
-                recentStore: PreviewRecentLocationStore()
-            )
+            model: LocationSearchModel(repository: PreviewLocationRepository())
         )
     }
 }

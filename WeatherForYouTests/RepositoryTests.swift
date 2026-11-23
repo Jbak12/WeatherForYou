@@ -16,7 +16,10 @@ final class RepositoryTests: XCTestCase {
     func testLocationRepositoryForwardsQueryToService() async throws {
         let service = StubGeocodingService()
         service.result = [.preview]
-        let repository = DefaultLocationRepository(service: service)
+        let repository = DefaultLocationRepository(
+            service: service,
+            recentStore: StubRecentLocationStore()
+        )
 
         let locations = try await repository.searchLocations(matching: " Berlin ")
 
@@ -27,7 +30,10 @@ final class RepositoryTests: XCTestCase {
     func testLocationRepositoryPropagatesServiceError() async {
         let service = StubGeocodingService()
         service.error = APIError.invalidResponse
-        let repository = DefaultLocationRepository(service: service)
+        let repository = DefaultLocationRepository(
+            service: service,
+            recentStore: StubRecentLocationStore()
+        )
 
         do {
             _ = try await repository.searchLocations(matching: "Berlin")
@@ -35,6 +41,25 @@ final class RepositoryTests: XCTestCase {
         } catch {
             XCTAssertTrue(error is APIError)
         }
+    }
+
+    func testLocationRepositoryForwardsRecentsToStore() async throws {
+        let store = StubRecentLocationStore()
+        store.locations = [.preview]
+        let repository = DefaultLocationRepository(
+            service: StubGeocodingService(),
+            recentStore: store
+        )
+
+        let recents = try await repository.recentLocations(limit: 5)
+        try await repository.recordView(of: .preview)
+        try await repository.removeRecentLocation(id: 1)
+        try await repository.clearRecentLocations()
+
+        XCTAssertEqual(recents, [.preview])
+        XCTAssertEqual(store.recorded, [.preview])
+        XCTAssertEqual(store.removedIDs, [1])
+        XCTAssertTrue(store.locations.isEmpty)
     }
 
     // MARK: - Forecast

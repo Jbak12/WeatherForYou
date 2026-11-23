@@ -17,13 +17,13 @@ struct ForecastView: View {
     init(
         location: Location,
         repository: ForecastRepository,
-        recentStore: RecentLocationStore
+        locationRepository: LocationRepository
     ) {
         _model = StateObject(
             wrappedValue: ForecastViewModel(
                 location: location,
                 repository: repository,
-                recentStore: recentStore
+                locationRepository: locationRepository
             )
         )
     }
@@ -44,7 +44,7 @@ struct ForecastView: View {
         ForecastView(
             location: .preview,
             repository: PreviewForecastRepository(),
-            recentStore: PreviewRecentLocationStore()
+            locationRepository: PreviewLocationRepository()
         )
     }
 }

@@ -158,7 +158,7 @@ final class ForecastServiceTests: XCTestCase {
         let model = ForecastViewModel(
             location: .preview,
             repository: repository,
-            recentStore: StubRecentLocationStore()
+            locationRepository: StubLocationRepository()
         )
 
         await model.load()
@@ -176,7 +176,7 @@ final class ForecastServiceTests: XCTestCase {
         let model = ForecastViewModel(
             location: .preview,
             repository: repository,
-            recentStore: StubRecentLocationStore()
+            locationRepository: StubLocationRepository()
         )
 
         await model.load()
@@ -191,31 +191,31 @@ final class ForecastServiceTests: XCTestCase {
     func testViewModelRecordsLocationAfterSuccessfulLoad() async {
         let repository = StubForecastRepository()
         repository.result = .preview
-        let store = StubRecentLocationStore()
+        let locationRepository = StubLocationRepository()
         let model = ForecastViewModel(
             location: .preview,
             repository: repository,
-            recentStore: store
+            locationRepository: locationRepository
         )
 
         await model.load()
 
-        XCTAssertEqual(store.recorded, [.preview])
+        XCTAssertEqual(locationRepository.recorded, [.preview])
     }
 
     func testViewModelDoesNotRecordLocationWhenLoadingFails() async {
         let repository = StubForecastRepository()
         repository.error = APIError.invalidResponse
-        let store = StubRecentLocationStore()
+        let locationRepository = StubLocationRepository()
         let model = ForecastViewModel(
             location: .preview,
             repository: repository,
-            recentStore: store
+            locationRepository: locationRepository
         )
 
         await model.load()
 
-        XCTAssertTrue(store.recorded.isEmpty)
+        XCTAssertTrue(locationRepository.recorded.isEmpty)
     }
 
     // MARK: - Helpers

@@ -6,18 +6,23 @@ Data flows in one direction:
 
 ```
 Views → View Models → Repositories → Services (networking)
+                                   → Stores (local persistence)
 ```
 
 - **Views** render state and forward user actions.
 - **View models** (`ObservableObject` + `@Published`) own screen state.
-- **Repositories** (`LocationRepository`, `ForecastRepository`) define the data
-  the app needs, independent of where it comes from.
+- **Repositories** (`LocationRepository`, `ForecastRepository`) are the
+  app-facing data contract. They compose the data sources and own policies such
+  as caching or merging.
 - **Services** (`GeocodingService`, `ForecastService`) perform the HTTP work.
+- **Stores** (`RecentLocationStore`) own local persistence.
 
 View models depend only on repository protocols and default to the live
 implementations (`DefaultLocationRepository`, `DefaultForecastRepository`).
 Tests and previews inject stubs, so nothing in the UI layer changes when a new
-data source is added.
+data source is added. For example, `DefaultLocationRepository` combines
+`GeocodingService` for search with `RecentLocationStore` for history, and view
+models never see either type.
 
 ## Persistence (GRDB)
 
@@ -47,9 +52,11 @@ drives ordering. `postcodes` is stored as a JSON array in a text column.
 
 **Layering**
 
-View models depend on `RecentLocationStore`, not on GRDB. `GRDBRecentLocationStore`
-is the only type that imports GRDB for persistence, and `AppDatabase.inMemory()`
-lets tests and previews run against a throwaway database.
+View models depend on `LocationRepository`, not on GRDB or `RecentLocationStore`.
+`DefaultLocationRepository` composes the geocoding service with the store, and
+`GRDBRecentLocationStore` is the only type that imports GRDB for persistence.
+`AppDatabase.inMemory()` lets tests and previews run against a throwaway
+database.
 
 To reset history, delete the app from the simulator/device (or the database
 file above).

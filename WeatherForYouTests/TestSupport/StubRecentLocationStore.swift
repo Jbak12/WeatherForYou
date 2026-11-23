@@ -13,6 +13,7 @@ final class StubRecentLocationStore: RecentLocationStore {
     var locations: [Location] = []
     var error: Error?
     private(set) var recorded: [Location] = []
+    private(set) var removedIDs: [Int] = []
 
     func recentLocations(limit: Int) async throws -> [Location] {
         if let error { throw error }
@@ -26,6 +27,7 @@ final class StubRecentLocationStore: RecentLocationStore {
 
     func remove(locationID: Int) async throws {
         if let error { throw error }
+        removedIDs.append(locationID)
         locations.removeAll { $0.id == locationID }
     }
 

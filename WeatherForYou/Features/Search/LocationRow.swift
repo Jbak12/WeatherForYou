@@ -34,8 +34,12 @@ struct LocationRow: View {
                     .foregroundStyle(.tertiary)
             }
         }
-        .padding(.vertical, 2)
-        .listRowBackground(Color.backgroundPrimary)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background(.backgroundSecondary, in: .rect(cornerRadius: 12))
+        .listRowBackground(Color.clear)
+        .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+        .listRowSeparator(.hidden)
     }
 }
 

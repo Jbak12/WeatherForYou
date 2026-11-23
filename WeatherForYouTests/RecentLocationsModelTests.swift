@@ -12,43 +12,44 @@ import XCTest
 final class RecentLocationsModelTests: XCTestCase {
 
     func testLoadRecentLocationsPublishesStoredLocations() async {
-        let store = StubRecentLocationStore()
-        store.locations = [.preview]
-        let model = makeModel(store: store)
+        let repository = StubLocationRepository()
+        repository.recents = [.preview]
+        let model = makeModel(repository: repository)
 
         await model.loadRecentLocations()
 
         XCTAssertEqual(model.recentLocations, [.preview])
     }
 
-    func testRemoveRecentLocationUpdatesListAndStore() async {
-        let store = StubRecentLocationStore()
-        store.locations = [.preview]
-        let model = makeModel(store: store)
+    func testRemoveRecentLocationUpdatesListAndRepository() async {
+        let repository = StubLocationRepository()
+        repository.recents = [.preview]
+        let model = makeModel(repository: repository)
         await model.loadRecentLocations()
 
         await model.removeRecentLocation(.preview)
 
         XCTAssertTrue(model.recentLocations.isEmpty)
-        XCTAssertTrue(store.locations.isEmpty)
+        XCTAssertTrue(repository.recents.isEmpty)
+        XCTAssertEqual(repository.removedIDs, [Location.preview.id])
     }
 
-    func testClearRecentLocationsUpdatesListAndStore() async {
-        let store = StubRecentLocationStore()
-        store.locations = [.preview]
-        let model = makeModel(store: store)
+    func testClearRecentLocationsUpdatesListAndRepository() async {
+        let repository = StubLocationRepository()
+        repository.recents = [.preview]
+        let model = makeModel(repository: repository)
         await model.loadRecentLocations()
 
         await model.clearRecentLocations()
 
         XCTAssertTrue(model.recentLocations.isEmpty)
-        XCTAssertTrue(store.locations.isEmpty)
+        XCTAssertTrue(repository.recents.isEmpty)
     }
 
     func testLoadRecentLocationsFallsBackToEmptyOnError() async {
-        let store = StubRecentLocationStore()
-        store.error = APIError.invalidResponse
-        let model = makeModel(store: store)
+        let repository = StubLocationRepository()
+        repository.error = APIError.invalidResponse
+        let model = makeModel(repository: repository)
 
         await model.loadRecentLocations()
 
@@ -57,10 +58,7 @@ final class RecentLocationsModelTests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func makeModel(store: StubRecentLocationStore) -> LocationSearchModel {
-        LocationSearchModel(
-            repository: PreviewLocationRepository(),
-            recentStore: store
-        )
+    private func makeModel(repository: StubLocationRepository) -> LocationSearchModel {
+        LocationSearchModel(repository: repository)
     }
 }

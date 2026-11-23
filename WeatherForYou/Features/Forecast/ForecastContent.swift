@@ -40,7 +40,7 @@ struct ForecastContent: View {
                 ForecastViewModel(
                     location: .preview,
                     repository: PreviewForecastRepository(),
-                    recentStore: PreviewRecentLocationStore()
+                    locationRepository: PreviewLocationRepository()
                 )
             )
     }
