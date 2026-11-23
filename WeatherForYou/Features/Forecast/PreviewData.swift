@@ -118,4 +118,37 @@ struct PreviewForecastRepository: ForecastRepository {
         .preview
     }
 }
+
+/// A `LocationRepository` that returns the sample location without networking.
+struct PreviewLocationRepository: LocationRepository {
+    func searchLocations(matching query: String) async throws -> [Location] {
+        query.isEmpty ? [] : [.preview]
+    }
+}
+
+/// A `RecentLocationStore` that keeps recents in memory for previews.
+final class PreviewRecentLocationStore: RecentLocationStore {
+    private var locations: [Location]
+
+    init(locations: [Location] = [.preview]) {
+        self.locations = locations
+    }
+
+    func recentLocations(limit: Int) async throws -> [Location] {
+        Array(locations.prefix(limit))
+    }
+
+    func record(_ location: Location) async throws {
+        locations.removeAll { $0.id == location.id }
+        locations.insert(location, at: 0)
+    }
+
+    func remove(locationID: Int) async throws {
+        locations.removeAll { $0.id == locationID }
+    }
+
+    func clear() async throws {
+        locations.removeAll()
+    }
+}
 #endif

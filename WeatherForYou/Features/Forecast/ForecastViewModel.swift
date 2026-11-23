@@ -22,17 +22,24 @@ final class ForecastViewModel: ObservableObject {
     let location: Location
 
     private let repository: ForecastRepository
+    private let recentStore: RecentLocationStore
 
     /// Creates a model backed by the default forecast repository.
     init(location: Location) {
         self.location = location
         self.repository = DefaultForecastRepository()
+        self.recentStore = GRDBRecentLocationStore.live
     }
 
-    /// Creates a model with an injected repository, for previews and tests.
-    init(location: Location, repository: ForecastRepository) {
+    /// Creates a model with injected dependencies, for previews and tests.
+    init(
+        location: Location,
+        repository: ForecastRepository,
+        recentStore: RecentLocationStore
+    ) {
         self.location = location
         self.repository = repository
+        self.recentStore = recentStore
     }
 
     func load() async {
@@ -43,6 +50,9 @@ final class ForecastViewModel: ObservableObject {
         do {
             let forecast = try await repository.forecast(for: location)
             state = .loaded(forecast)
+
+            // Persistence is best-effort and must never break the screen.
+            try? await recentStore.record(location)
         } catch is CancellationError {
             return
         } catch {

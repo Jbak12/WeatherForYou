@@ -22,8 +22,12 @@ final class LocationSearchModel: ObservableObject {
     @Published var query = ""
     @Published private(set) var results: [Location] = []
     @Published private(set) var state: State = .idle
+    @Published private(set) var recentLocations: [Location] = []
+
+    private static let recentLimit = 10
 
     private let repository: LocationRepository
+    private let recentStore: RecentLocationStore
     private let debounce: Duration
 
     /// Creates a model backed by the default location repository.
@@ -32,17 +36,50 @@ final class LocationSearchModel: ObservableObject {
     ///   searching.
     init(debounce: Duration = .milliseconds(300)) {
         self.repository = DefaultLocationRepository()
+        self.recentStore = GRDBRecentLocationStore.live
         self.debounce = debounce
     }
 
-    /// Creates a model with an injected repository, for previews and tests.
-    init(repository: LocationRepository, debounce: Duration = .milliseconds(300)) {
+    /// Creates a model with injected dependencies, for previews and tests.
+    init(
+        repository: LocationRepository,
+        recentStore: RecentLocationStore,
+        debounce: Duration = .milliseconds(300)
+    ) {
         self.repository = repository
+        self.recentStore = recentStore
         self.debounce = debounce
     }
 
     var trimmedQuery: String {
         query.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    /// Reloads the recently viewed locations.
+    func loadRecentLocations() async {
+        recentLocations = (try? await recentStore.recentLocations(
+            limit: Self.recentLimit
+        )) ?? []
+    }
+
+    /// Removes a single location from the recents.
+    func removeRecentLocation(_ location: Location) async {
+        do {
+            try await recentStore.remove(locationID: location.id)
+            recentLocations.removeAll { $0.id == location.id }
+        } catch {
+            // Keep the row visible when the deletion fails.
+        }
+    }
+
+    /// Removes every recent location.
+    func clearRecentLocations() async {
+        do {
+            try await recentStore.clear()
+            recentLocations = []
+        } catch {
+            // Keep the rows visible when the deletion fails.
+        }
     }
 
     /// Debounces the current query, then loads matching locations.

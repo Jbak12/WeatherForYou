@@ -17,9 +17,42 @@ Views → View Models → Repositories → Services (networking)
 View models depend only on repository protocols and default to the live
 implementations (`DefaultLocationRepository`, `DefaultForecastRepository`).
 Tests and previews inject stubs, so nothing in the UI layer changes when a new
-data source is added. The repository is the seam for a future SQLite/GRDB
-cache: persistence will be added inside the default repositories, not in the
-views or view models.
+data source is added.
+
+## Persistence (GRDB)
+
+Recents are stored in SQLite through [GRDB](https://github.com/groue/GRDB.swift).
+The database lives at:
+
+```
+Application Support/WeatherForYou/weather.sqlite
+```
+
+`AppDatabase` opens it once, runs migrations, and exposes a `DatabaseWriter`.
+If the file cannot be opened, the app keeps working with an empty recent list
+instead of crashing.
+
+**Behavior**
+
+- A city is saved when its forecast screen finishes loading successfully.
+- Re-viewing a city moves it to the top instead of adding a duplicate.
+- The search screen shows the 10 most recent cities when the search field is
+  empty. Swipe a row to remove it, or use **Clear** in the section header.
+- Recents are reloaded when you navigate back from a forecast.
+
+**Schema**
+
+`recent_location` stores the location's API fields plus `last_viewed_at`, which
+drives ordering. `postcodes` is stored as a JSON array in a text column.
+
+**Layering**
+
+View models depend on `RecentLocationStore`, not on GRDB. `GRDBRecentLocationStore`
+is the only type that imports GRDB for persistence, and `AppDatabase.inMemory()`
+lets tests and previews run against a throwaway database.
+
+To reset history, delete the app from the simulator/device (or the database
+file above).
 
 ## Static URL macro
 

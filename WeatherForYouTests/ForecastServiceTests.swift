@@ -155,7 +155,11 @@ final class ForecastServiceTests: XCTestCase {
     func testViewModelReachesLoadedState() async {
         let repository = StubForecastRepository()
         repository.result = .preview
-        let model = ForecastViewModel(location: .preview, repository: repository)
+        let model = ForecastViewModel(
+            location: .preview,
+            repository: repository,
+            recentStore: StubRecentLocationStore()
+        )
 
         await model.load()
 
@@ -169,7 +173,11 @@ final class ForecastServiceTests: XCTestCase {
     func testViewModelReachesFailedState() async {
         let repository = StubForecastRepository()
         repository.error = APIError.invalidResponse
-        let model = ForecastViewModel(location: .preview, repository: repository)
+        let model = ForecastViewModel(
+            location: .preview,
+            repository: repository,
+            recentStore: StubRecentLocationStore()
+        )
 
         await model.load()
 
@@ -178,6 +186,36 @@ final class ForecastServiceTests: XCTestCase {
         }
 
         XCTAssertFalse(message.isEmpty)
+    }
+
+    func testViewModelRecordsLocationAfterSuccessfulLoad() async {
+        let repository = StubForecastRepository()
+        repository.result = .preview
+        let store = StubRecentLocationStore()
+        let model = ForecastViewModel(
+            location: .preview,
+            repository: repository,
+            recentStore: store
+        )
+
+        await model.load()
+
+        XCTAssertEqual(store.recorded, [.preview])
+    }
+
+    func testViewModelDoesNotRecordLocationWhenLoadingFails() async {
+        let repository = StubForecastRepository()
+        repository.error = APIError.invalidResponse
+        let store = StubRecentLocationStore()
+        let model = ForecastViewModel(
+            location: .preview,
+            repository: repository,
+            recentStore: store
+        )
+
+        await model.load()
+
+        XCTAssertTrue(store.recorded.isEmpty)
     }
 
     // MARK: - Helpers

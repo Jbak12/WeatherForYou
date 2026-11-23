@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1188C00330AE513000858392 /* StaticURL in Frameworks */ = {isa = PBXBuildFile; productRef = 1188C00230AE513000858392 /* StaticURL */; };
+		1188C01230AE513000858392 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 1188C01130AE513000858392 /* GRDB */; };
+		1188C01330AE513000858392 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 1188C01430AE513000858392 /* GRDB */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +59,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1188C00330AE513000858392 /* StaticURL in Frameworks */,
+				1188C01230AE513000858392 /* GRDB in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,6 +67,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1188C01330AE513000858392 /* GRDB in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,6 +122,7 @@
 			name = WeatherForYou;
 			packageProductDependencies = (
 				1188C00230AE513000858392 /* StaticURL */,
+				1188C01130AE513000858392 /* GRDB */,
 			);
 			productName = WeatherForYou;
 			productReference = 1188BFD530AE513000858392 /* WeatherForYou.app */;
@@ -141,6 +146,7 @@
 			);
 			name = WeatherForYouTests;
 			packageProductDependencies = (
+				1188C01430AE513000858392 /* GRDB */,
 			);
 			productName = WeatherForYouTests;
 			productReference = 1188BFE230AE513200858392 /* WeatherForYouTests.xctest */;
@@ -203,6 +209,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				1188C00130AE513000858392 /* XCLocalSwiftPackageReference "StaticURL" */,
+				1188C01030AE513000858392 /* XCRemoteSwiftPackageReference "GRDB" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1188BFD630AE513000858392 /* Products */;
@@ -592,10 +599,31 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		1188C01030AE513000858392 /* XCRemoteSwiftPackageReference "GRDB" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/groue/GRDB.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.12.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		1188C00230AE513000858392 /* StaticURL */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StaticURL;
+		};
+		1188C01130AE513000858392 /* GRDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1188C01030AE513000858392 /* XCRemoteSwiftPackageReference "GRDB" */;
+			productName = GRDB;
+		};
+		1188C01430AE513000858392 /* GRDB */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1188C01030AE513000858392 /* XCRemoteSwiftPackageReference "GRDB" */;
+			productName = GRDB;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

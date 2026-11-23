@@ -166,6 +166,7 @@ final class GeocodingServiceTests: XCTestCase {
             repository: DefaultLocationRepository(
                 service: OpenMeteoGeocodingService(client: client)
             ),
+            recentStore: StubRecentLocationStore(),
             debounce: .zero
         )
 
@@ -184,6 +185,7 @@ final class GeocodingServiceTests: XCTestCase {
             repository: DefaultLocationRepository(
                 service: OpenMeteoGeocodingService(client: client)
             ),
+            recentStore: StubRecentLocationStore(),
             debounce: .zero
         )
 
