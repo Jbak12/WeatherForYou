@@ -25,26 +25,26 @@ struct LocationSearchContent: View {
                 recentList
             } else {
                 ContentUnavailableView(
-                    "Search for a city",
+                    "search.idle.title",
                     systemImage: "magnifyingglass",
-                    description: Text("Enter at least two characters to find a place.")
+                    description: Text("search.idle.message")
                 )
             }
         case .loading:
-            ProgressView("Searching…")
+            ProgressView("search.loading")
         case .empty:
             ContentUnavailableView(
-                "No results",
+                "search.empty.title",
                 systemImage: "mappin.slash",
-                description: Text("The search returned no places.")
+                description: Text("search.empty.message")
             )
         case let .failed(message):
             ContentUnavailableView {
-                Label("Couldn't load places", systemImage: "exclamationmark.triangle")
+                Label("search.error.title", systemImage: "exclamationmark.triangle")
             } description: {
                 Text(message)
             } actions: {
-                Button("Try Again", action: retry)
+                Button("action.retry", action: retry)
             }
         case .loaded:
             List(viewModel.results) { row in
@@ -72,11 +72,11 @@ struct LocationSearchContent: View {
                 }
             } header: {
                 HStack {
-                    Text("Recent")
+                    Text("search.recents.title")
 
                     Spacer()
 
-                    Button("Clear") {
+                    Button("search.recents.clear") {
                         Task { await viewModel.clearRecentLocations() }
                     }
                     .font(.footnote)

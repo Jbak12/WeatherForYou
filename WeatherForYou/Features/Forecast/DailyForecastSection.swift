@@ -14,7 +14,7 @@ struct DailyForecastSection: View {
     var body: some View {
         if !entries.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
-                Text("7-day forecast")
+                Text("forecast.daily.title")
                     .font(.headline)
 
                 VStack(spacing: 0) {

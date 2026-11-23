@@ -7,30 +7,30 @@
 
 import SwiftUI
 
-struct CurrentConditionsCard: View {
+struct CurrentCOnditionsView: View {
     let current: Forecast.CurrentConditions
     let units: Forecast.Units
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Current conditions")
+            Text("forecast.conditions.title")
                 .font(.headline)
 
             Grid(alignment: .leading, horizontalSpacing: 16, verticalSpacing: 12) {
                 GridRow {
-                    Label("Humidity", systemImage: "humidity")
+                    Label("forecast.conditions.humidity", systemImage: "humidity")
                     Text(humidityText)
                 }
                 GridRow {
-                    Label("Wind", systemImage: "wind")
+                    Label("forecast.conditions.wind", systemImage: "wind")
                     Text(windText)
                 }
                 GridRow {
-                    Label("Gusts", systemImage: "wind")
+                    Label("forecast.conditions.gusts", systemImage: "wind")
                     Text(gustsText)
                 }
                 GridRow {
-                    Label("Precipitation", systemImage: "drop.fill")
+                    Label("forecast.conditions.precipitation", systemImage: "drop.fill")
                     Text(precipitationText)
                 }
             }
@@ -41,28 +41,33 @@ struct CurrentConditionsCard: View {
     }
 
     private var humidityText: String {
-        current.humidity.map { "\($0)\(units.humidity)" } ?? "—"
+        current.humidity.map { "\($0)\(units.humidity)" } ?? unavailableText
     }
 
     private var windText: String {
         let speed = current.windSpeed.map {
             "\($0.formatted(.number.precision(.fractionLength(0)))) \(units.windSpeed)"
-        } ?? "—"
+        } ?? unavailableText
 
         guard let direction = current.windDirection else { return speed }
 
-        return "\(speed) \(WindDirection(degrees: direction).rawValue)"
+        let compass = WindDirection(degrees: direction).localizedAbbreviation
+        return String(localized: "forecast.conditions.wind_value", defaultValue: "\(speed) \(compass)")
     }
 
     private var gustsText: String {
         current.windGusts.map {
             "\($0.formatted(.number.precision(.fractionLength(0)))) \(units.windSpeed)"
-        } ?? "—"
+        } ?? unavailableText
     }
 
     private var precipitationText: String {
         current.precipitation.map {
             "\($0.formatted(.number.precision(.fractionLength(1)))) \(units.precipitation)"
-        } ?? "—"
+        } ?? unavailableText
+    }
+
+    private var unavailableText: String {
+        String(localized: "forecast.conditions.unavailable")
     }
 }

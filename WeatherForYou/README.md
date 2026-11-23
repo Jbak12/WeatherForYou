@@ -1,5 +1,13 @@
 # WeatherForYou Project
 
+## Localization
+
+App copy uses semantic keys in `Resources/Localizable.xcstrings`. English is
+the only supported language. Add translations in the catalog, and keep complete
+sentences together when they contain placeholders. The launch storyboard uses
+`en.lproj/LaunchScreen.strings` for its tagline. Place names and other API data
+are displayed as supplied by the service.
+
 ## Architecture
 
 Data flows in one direction:

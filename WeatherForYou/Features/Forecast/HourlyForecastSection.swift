@@ -14,7 +14,7 @@ struct HourlyForecastSection: View {
     var body: some View {
         if !entries.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
-                Text("Next 24 hours")
+                Text("forecast.hourly.title")
                     .font(.headline)
 
                 ScrollView(.horizontal, showsIndicators: false) {

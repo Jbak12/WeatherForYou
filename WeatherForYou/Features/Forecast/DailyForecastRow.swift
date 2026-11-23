@@ -41,7 +41,7 @@ struct DailyForecastRow: View {
     }
 
     private var dayText: String {
-        guard !isToday else { return "Today" }
+        guard !isToday else { return String(localized: "forecast.daily.today") }
 
         return entry.date.formatted(
             Date.FormatStyle(timeZone: timeZone).weekday(.abbreviated)

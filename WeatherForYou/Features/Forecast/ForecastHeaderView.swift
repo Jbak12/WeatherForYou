@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ForecastHeaderView: View {
+    @Environment(\.locale) private var locale
+
     let name: String
     let subtitle: String?
     let forecast: Forecast
@@ -35,11 +37,14 @@ struct ForecastHeaderView: View {
                         Text("\(current.temperature, format: .number.precision(.fractionLength(0)))\(forecast.units.temperature)")
                             .font(.system(.largeTitle, design: .rounded, weight: .thin))
 
-                        Text(current.weatherCode.description)
+                        Text(current.weatherCode.localizedDescription)
                             .font(.headline)
 
                         if let apparent = current.apparentTemperature {
-                            Text("Feels like \(apparent, format: .number.precision(.fractionLength(0)))\(forecast.units.temperature)")
+                            Text(LocalizedStringResource(
+                                "forecast.feels_like",
+                                defaultValue: "Feels like \(temperatureText(apparent))"
+                            ))
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
@@ -47,7 +52,10 @@ struct ForecastHeaderView: View {
                 }
 
                 if let today = forecast.daily.first {
-                    Text("H: \(today.temperatureMax, format: .number.precision(.fractionLength(0)))\(forecast.units.temperature)   L: \(today.temperatureMin, format: .number.precision(.fractionLength(0)))\(forecast.units.temperature)")
+                    Text(LocalizedStringResource(
+                        "forecast.high_low",
+                        defaultValue: "H: \(temperatureText(today.temperatureMax))   L: \(temperatureText(today.temperatureMin))"
+                    ))
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -57,5 +65,9 @@ struct ForecastHeaderView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(8)
         .background(.thinMaterial, in: .rect(cornerRadius: 16))
+    }
+
+    private func temperatureText(_ value: Double) -> String {
+        value.formatted(.number.precision(.fractionLength(0)).locale(locale)) + forecast.units.temperature
     }
 }

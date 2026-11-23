@@ -15,15 +15,15 @@ struct ForecastContent: View {
     var body: some View {
         switch model.state {
         case .idle, .loading:
-            ProgressView("Loading forecast…")
+            ProgressView("forecast.loading")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         case let .failed(message):
             ContentUnavailableView {
-                Label("Couldn't load forecast", systemImage: "exclamationmark.triangle")
+                Label("forecast.error.title", systemImage: "exclamationmark.triangle")
             } description: {
                 Text(message)
             } actions: {
-                Button("Try Again", action: retry)
+                Button("action.retry", action: retry)
             }
         case let .loaded(forecast):
             ForecastDetailsView(name: name, subtitle: subtitle, forecast: forecast)

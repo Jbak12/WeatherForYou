@@ -18,7 +18,7 @@ struct ForecastDetailsView: View {
                 ForecastHeaderView(name: name, subtitle: subtitle, forecast: forecast)
 
                 if let current = forecast.current {
-                    CurrentConditionsCard(current: current, units: forecast.units)
+                    CurrentCOnditionsView(current: current, units: forecast.units)
                 }
 
                 HourlyForecastSection(

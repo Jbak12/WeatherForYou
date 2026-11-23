@@ -15,18 +15,18 @@ struct ContentView: View {
     var body: some View {
         NavigationStack(path: $path) {
             LocationSearchContent(viewModel: model, onSelect: selectLocation)
-                .navigationTitle("Places")
+                .navigationTitle("search.title")
                 .searchable(
                     text: $model.query,
                     placement: .navigationBarDrawer(displayMode: .always),
-                    prompt: "Search cities"
+                    prompt: Text("search.prompt")
                 )
                 .navigationDestination(for: LocationRoute.self) { route in
                     switch route {
                     case let .details(latitude, longitude):
                         ForecastView(
                             coordinates: Coordinates(latitude: latitude, longitude: longitude),
-                            name: selectedRow?.name ?? String(localized: "Forecast"),
+                            name: selectedRow?.name ?? String(localized: "forecast.title"),
                             subtitle: selectedRow?.subtitle,
                             onLoad: model.recentLocationRecorder()
                         )

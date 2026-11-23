@@ -122,18 +122,27 @@ enum APIError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .invalidURL:
-            return "The request URL couldn't be built."
+            return String(localized: "api.error.invalid_url")
         case .invalidResponse:
-            return "The server returned an unexpected response."
+            return String(localized: "api.error.invalid_response")
         case .emptyResponse:
-            return "The server returned an empty response."
+            return String(localized: "api.error.empty_response")
         case let .httpError(statusCode, body):
             if let reason = body.flatMap(Self.serverReason) {
-                return "The server responded with status \(statusCode): \(reason)"
+                return String(
+                    localized: "api.error.status_with_reason",
+                    defaultValue: "The server responded with status \(String(statusCode)): \(reason)"
+                )
             }
-            return "The server responded with status \(statusCode)."
+            return String(
+                localized: "api.error.status",
+                defaultValue: "The server responded with status \(String(statusCode))."
+            )
         case let .decodingFailed(underlying, _):
-            return "The server response couldn't be read. (\(underlying.localizedDescription))"
+            return String(
+                localized: "api.error.decoding",
+                defaultValue: "The server response couldn't be read. (\(underlying.localizedDescription))"
+            )
         }
     }
 

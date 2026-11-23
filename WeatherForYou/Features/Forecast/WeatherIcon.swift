@@ -19,7 +19,7 @@ struct WeatherIcon: View {
             .scaledToFit()
             .frame(width: size, height: size)
             .foregroundStyle(.iconPrimary)
-            .accessibilityLabel(code.description)
+            .accessibilityLabel(Text(code.localizedDescription))
     }
 
     private var resource: ImageResource {
