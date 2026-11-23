@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// A decoded forecast, normalized into values the views can display directly.
+/// Normalized weather data, independent of API encoding and display formatting.
 struct Forecast: Sendable, Equatable {
     let timeZone: TimeZone
     let current: CurrentConditions?

@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct DailyForecastSection: View {
-    let entries: [Forecast.DailyEntry]
-    let timeZone: TimeZone
+    let entries: [DailyForecastRowModel]
 
     var body: some View {
         if !entries.isEmpty {
@@ -19,11 +18,7 @@ struct DailyForecastSection: View {
 
                 VStack(spacing: 0) {
                     ForEach(entries) { entry in
-                        DailyForecastRow(
-                            entry: entry,
-                            timeZone: timeZone,
-                            isToday: entry.id == entries.first?.id
-                        )
+                        DailyForecastRow(model: entry)
 
                         if entry.id != entries.last?.id {
                             Divider()

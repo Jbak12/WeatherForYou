@@ -19,15 +19,19 @@ enum WindDirection: String, CaseIterable, Sendable {
     case northWest = "NW"
 
     var localizedAbbreviation: String {
+        String(localized: abbreviationResource)
+    }
+
+    var abbreviationResource: LocalizedStringResource {
         switch self {
-        case .north: String(localized: "wind.north")
-        case .northEast: String(localized: "wind.northeast")
-        case .east: String(localized: "wind.east")
-        case .southEast: String(localized: "wind.southeast")
-        case .south: String(localized: "wind.south")
-        case .southWest: String(localized: "wind.southwest")
-        case .west: String(localized: "wind.west")
-        case .northWest: String(localized: "wind.northwest")
+        case .north: "wind.north"
+        case .northEast: "wind.northeast"
+        case .east: "wind.east"
+        case .southEast: "wind.southeast"
+        case .south: "wind.south"
+        case .southWest: "wind.southwest"
+        case .west: "wind.west"
+        case .northWest: "wind.northwest"
         }
     }
 

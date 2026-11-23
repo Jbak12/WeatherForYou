@@ -10,28 +10,28 @@ import SwiftUI
 struct ForecastView: View {
     @StateObject private var model: ForecastViewModel
     let name: String
-    let subtitle: String?
 
     init(
         coordinates: Coordinates,
         name: String,
         subtitle: String?,
         repository: ForecastRepository? = nil,
-        onLoad: @escaping @MainActor () async -> Void = {}
+        onForecastLoaded: @escaping @MainActor () async -> Void = {}
     ) {
         self.name = name
-        self.subtitle = subtitle
         _model = StateObject(
             wrappedValue: ForecastViewModel(
                 coordinates: coordinates,
+                name: name,
+                subtitle: subtitle,
                 repository: repository ?? DefaultForecastRepository(),
-                onLoad: onLoad
+                onForecastLoaded: onForecastLoaded
             )
         )
     }
 
     var body: some View {
-        ForecastContent(name: name, subtitle: subtitle)
+        ForecastContent()
             .environmentObject(model)
             .navigationTitle(name)
             .navigationBarTitleDisplayMode(.inline)

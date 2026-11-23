@@ -1,29 +1,16 @@
 //
-//  WeatherIcon.swift
+//  WeatherCode+ImageResource.swift
 //  WeatherForYou
 //
 //  Created by Jakub Bakalarz on 22/11/2026.
 //
 
-import SwiftUI
+import DeveloperToolsSupport
 
 /// Maps a WMO weather code to one of the custom weather icon assets.
-struct WeatherIcon: View {
-    let code: WeatherCode
-    let isDay: Bool
-    var size: CGFloat = 28
-
-    var body: some View {
-        Image(resource)
-            .resizable()
-            .scaledToFit()
-            .frame(width: size, height: size)
-            .foregroundStyle(.iconPrimary)
-            .accessibilityLabel(Text(code.localizedDescription))
-    }
-
-    private var resource: ImageResource {
-        switch code {
+extension WeatherCode {
+    func imageResource(isDay: Bool) -> ImageResource {
+        switch self {
         case .clearSky, .mainlyClear:
             return isDay ? ._01SunLine : ._02MoonStarsLine
         case .partlyCloudy:
@@ -70,16 +57,4 @@ struct WeatherIcon: View {
             return ._28NaLine
         }
     }
-}
-
-#Preview {
-    HStack(spacing: 16) {
-        WeatherIcon(code: .clearSky, isDay: true, size: 40)
-        WeatherIcon(code: .clearSky, isDay: false, size: 40)
-        WeatherIcon(code: .partlyCloudy, isDay: true, size: 40)
-        WeatherIcon(code: .heavyRain, isDay: true, size: 40)
-        WeatherIcon(code: .heavySnowfall, isDay: true, size: 40)
-        WeatherIcon(code: .thunderstorm, isDay: true, size: 40)
-    }
-    .padding()
 }

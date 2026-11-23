@@ -45,15 +45,11 @@ struct OpenMeteoForecastService: ForecastService {
     ].joined(separator: ",")
 
     private let client: APIClient
-    private let now: () -> Date
 
     init(
-        client: APIClient = DefaultAPIClient(baseURL: Self.baseURL),
-        now: @escaping () -> Date = { .now }
+        client: APIClient = DefaultAPIClient(baseURL: Self.baseURL)
     ) {
-            self.client = client
-       
-        self.now = now
+        self.client = client
     }
 
     func forecast(at coordinates: Coordinates) async throws -> Forecast {
@@ -127,7 +123,7 @@ private extension OpenMeteoForecastService {
         let windSpeeds = dto.windSpeed10m ?? []
         let isDayValues = dto.isDay ?? []
 
-        let entries = dto.time.indices.compactMap { index -> Forecast.HourlyEntry? in
+        return dto.time.indices.compactMap { index -> Forecast.HourlyEntry? in
             guard let temperature = temperatures[safe: index] ?? nil else {
                 return nil
             }
@@ -147,8 +143,6 @@ private extension OpenMeteoForecastService {
             )
         }
 
-        let upcoming = entries.filter { $0.date >= now() }
-        return Array(upcoming.prefix(24))
     }
 
     func makeDaily(

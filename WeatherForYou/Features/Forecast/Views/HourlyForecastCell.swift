@@ -8,22 +8,21 @@
 import SwiftUI
 
 struct HourlyForecastCell: View {
-    let entry: Forecast.HourlyEntry
-    let timeZone: TimeZone
+    let model: HourlyForecastCellModel
 
     var body: some View {
         VStack(spacing: 8) {
-            Text(hourText)
+            Text(model.time)
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
-            WeatherIcon(code: entry.weatherCode, isDay: entry.isDay, size: 28)
+            WeatherIcon(model: model.icon)
 
-            Text("\(entry.temperature, format: .number.precision(.fractionLength(0)))°")
+            Text(model.temperature)
                 .font(.subheadline.weight(.semibold))
 
-            if let probability = entry.precipitationProbability, probability > 0 {
-                Label("\(probability)%", systemImage: "drop.fill")
+            if let precipitation = model.precipitation {
+                Label(precipitation, systemImage: "drop.fill")
                     .font(.caption2)
                     .foregroundStyle(.blue)
             } else {
@@ -35,9 +34,4 @@ struct HourlyForecastCell: View {
         .padding(.vertical, 8)
     }
 
-    private var hourText: String {
-        entry.date.formatted(
-            Date.FormatStyle(date: .omitted, time: .shortened, timeZone: timeZone)
-        )
-    }
 }

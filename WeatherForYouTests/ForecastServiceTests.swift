@@ -17,7 +17,7 @@ final class ForecastServiceTests: XCTestCase {
     func testForecastBuildsExpectedQueryItems() async throws {
         let client = StubAPIClient()
         client.result = makeResponse()
-        let service = OpenMeteoForecastService(client: client, now: { .distantPast })
+        let service = OpenMeteoForecastService(client: client)
 
         _ = try await service.forecast(at: coordinates)
 
@@ -104,12 +104,12 @@ final class ForecastServiceTests: XCTestCase {
     func testMapsResponseIntoDomainForecast() async throws {
         let client = StubAPIClient()
         client.result = makeResponse()
-        let service = OpenMeteoForecastService(client: client, now: { .distantPast })
+        let service = OpenMeteoForecastService(client: client)
 
         let forecast = try await service.forecast(at: coordinates)
 
         XCTAssertEqual(forecast.timeZone.identifier, "Europe/Berlin")
-        XCTAssertEqual(forecast.hourly.count, 24)
+        XCTAssertEqual(forecast.hourly.count, 30)
         XCTAssertEqual(forecast.daily.count, 7)
         XCTAssertEqual(forecast.units.temperature, "°C")
         XCTAssertEqual(forecast.units.windSpeed, "km/h")
@@ -134,19 +134,21 @@ final class ForecastServiceTests: XCTestCase {
         XCTAssertNotNil(firstDay.sunset)
     }
 
-    func testHourlyKeepsOnlyUpcomingHours() async throws {
+    func testPresentationIncludesCurrentHourAndCapsHourlyEntriesAt24() async throws {
         let client = StubAPIClient()
         let response = makeResponse(hourCount: 30)
         client.result = response
         let base = try XCTUnwrap(response.hourly?.time.first)
-        let now = Date(timeIntervalSince1970: TimeInterval(base + 5 * 3_600))
+        let now = Date(timeIntervalSince1970: TimeInterval(base + 5 * 3_600 + 600))
 
-        let service = OpenMeteoForecastService(client: client, now: { now })
+        let service = OpenMeteoForecastService(client: client)
         let forecast = try await service.forecast(at: coordinates)
+        let mapper = ForecastPresentationMapper(locale: Locale(identifier: "en_US"), now: now)
+        let details = mapper.map(forecast, name: "Berlin", subtitle: nil)
 
-        XCTAssertEqual(forecast.hourly.count, 24)
+        XCTAssertEqual(details.hourly.count, 24)
         XCTAssertEqual(
-            forecast.hourly.first?.date,
+            details.hourly.first?.id,
             Date(timeIntervalSince1970: TimeInterval(base + 5 * 3_600))
         )
     }
@@ -158,16 +160,19 @@ final class ForecastServiceTests: XCTestCase {
         repository.result = .preview
         let model = ForecastViewModel(
             coordinates: coordinates,
+            name: "Berlin",
+            subtitle: nil,
             repository: repository
         )
 
         await model.load()
 
-        guard case let .loaded(forecast) = model.state else {
+        guard case let .loaded(details) = model.state else {
             return XCTFail("Expected the loaded state, got \(model.state).")
         }
 
-        XCTAssertEqual(forecast, .preview)
+        XCTAssertEqual(details.header.name, "Berlin")
+        XCTAssertEqual(details.daily.count, 7)
     }
 
     func testViewModelReachesFailedState() async {
@@ -175,6 +180,8 @@ final class ForecastServiceTests: XCTestCase {
         repository.error = APIError.invalidResponse
         let model = ForecastViewModel(
             coordinates: coordinates,
+            name: "Berlin",
+            subtitle: nil,
             repository: repository
         )
 
@@ -193,8 +200,10 @@ final class ForecastServiceTests: XCTestCase {
         var didLoad = false
         let model = ForecastViewModel(
             coordinates: coordinates,
+            name: "Berlin",
+            subtitle: nil,
             repository: repository,
-            onLoad: { didLoad = true }
+            onForecastLoaded: { didLoad = true }
         )
 
         await model.load()
@@ -208,8 +217,10 @@ final class ForecastServiceTests: XCTestCase {
         var didLoad = false
         let model = ForecastViewModel(
             coordinates: coordinates,
+            name: "Berlin",
+            subtitle: nil,
             repository: repository,
-            onLoad: { didLoad = true }
+            onForecastLoaded: { didLoad = true }
         )
 
         await model.load()

@@ -40,6 +40,18 @@ models never see either type.
   with strings already formatted. View models build them, so views stay free of
   formatting logic.
 
+### Forecast data flow
+
+`ForecastResponse` mirrors Open-Meteo's JSON. The forecast service converts it
+to `Forecast`, a typed model with dates, weather codes, and units. The repository
+returns that model without display formatting.
+
+`ForecastViewModel` uses `ForecastPresentationMapper` to produce
+`ForecastDetailsModel` and its display-ready sections. The mapper formats values
+for the selected locale and forecast time zone, and selects up to 24 hourly
+entries starting with the current hour when available. The views only render
+the resulting models.
+
 ## Persistence (GRDB)
 
 Recents are stored in SQLite through [GRDB](https://github.com/groue/GRDB.swift).

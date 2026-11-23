@@ -28,7 +28,7 @@ struct ContentView: View {
                             coordinates: Coordinates(latitude: latitude, longitude: longitude),
                             name: selectedRow?.name ?? String(localized: "forecast.title"),
                             subtitle: selectedRow?.subtitle,
-                            onLoad: model.recentLocationRecorder()
+                            onForecastLoaded: model.recentLocationRecorder()
                         )
                     }
                 }

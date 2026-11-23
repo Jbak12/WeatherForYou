@@ -37,8 +37,11 @@ extension LocationDto {
 extension Forecast {
     /// A deterministic sample forecast used by SwiftUI previews.
     static var preview: Forecast {
+        preview(at: Date(timeIntervalSince1970: 1_795_380_300))
+    }
+
+    static func preview(at reference: Date) -> Forecast {
         let timeZone = TimeZone(identifier: "Europe/Berlin") ?? .current
-        let reference = Date(timeIntervalSince1970: 1_795_380_300)
 
         let units = Forecast.Units(
             temperature: "°C",
@@ -115,7 +118,7 @@ extension Forecast {
 /// A `ForecastRepository` that returns the sample forecast without networking.
 struct PreviewForecastRepository: ForecastRepository {
     func forecast(at coordinates: Coordinates) async throws -> Forecast {
-        .preview
+        .preview(at: .now)
     }
 }
 
