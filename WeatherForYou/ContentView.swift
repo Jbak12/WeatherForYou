@@ -8,22 +8,22 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var model: LocationSearchViemodel
+    @StateObject private var locationSearchViewModel: LocationSearchViemodel
     @State private var path: [LocationRoute] = []
     @State private var selectedRow: LocationRowModel?
 
     init(locationRepository: LocationRepository) {
-        _model = StateObject(
+        _locationSearchViewModel = StateObject(
             wrappedValue: LocationSearchViemodel(repository: locationRepository)
         )
     }
 
     var body: some View {
         NavigationStack(path: $path) {
-            LocationSearchContent(viewModel: model, onSelect: selectLocation)
+            LocationSearchContent(viewModel: locationSearchViewModel, onSelect: selectLocation)
                 .navigationTitle("search.title")
                 .searchable(
-                    text: $model.query,
+                    text: $locationSearchViewModel.query,
                     placement: .navigationBarDrawer(displayMode: .always),
                     prompt: Text("search.prompt")
                 )
@@ -34,28 +34,28 @@ struct ContentView: View {
                             coordinates: Coordinates(latitude: latitude, longitude: longitude),
                             name: selectedRow?.name ?? String(localized: "forecast.title"),
                             subtitle: selectedRow?.subtitle,
-                            onForecastLoaded: model.recentLocationRecorder()
+                            onForecastLoaded: locationSearchViewModel.recentLocationRecorder()
                         )
                     }
                 }
         }
         .task {
-            await model.loadRecentLocations()
+            await locationSearchViewModel.loadRecentLocations()
         }
-        .task(id: model.query) {
-            await model.search()
+        .task(id: locationSearchViewModel.query) {
+            await locationSearchViewModel.search()
         }
         .onChange(of: path.count) { _, count in
             // A city is recorded when its details load; refresh recents when
             // the user returns to the search screen.
             guard count == 0 else { return }
 
-            Task { await model.loadRecentLocations() }
+            Task { await locationSearchViewModel.loadRecentLocations() }
         }
     }
 
     private func selectLocation(_ row: LocationRowModel) {
-        guard path.isEmpty, let coordinates = model.selectLocation(id: row.id) else { return }
+        guard path.isEmpty, let coordinates = locationSearchViewModel.selectLocation(id: row.id) else { return }
 
         selectedRow = row
         path.append(.details(latitude: coordinates.latitude, longitude: coordinates.longitude))
