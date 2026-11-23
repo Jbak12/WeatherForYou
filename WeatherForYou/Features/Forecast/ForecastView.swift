@@ -33,6 +33,8 @@ struct ForecastView: View {
     var body: some View {
         ForecastContent()
             .environmentObject(model)
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier("forecast.screen")
             .navigationTitle(name)
             .navigationBarTitleDisplayMode(.inline)
             .task {

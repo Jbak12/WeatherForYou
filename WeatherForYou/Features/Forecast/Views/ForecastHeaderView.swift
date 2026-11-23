@@ -23,7 +23,7 @@ struct ForecastHeaderView: View {
 
             if let current = model.current {
                 HStack(alignment: .top, spacing: 16) {
-                    WeatherIcon(model: current.icon, size: 64)
+                    WeatherIcon(model: current.icon, accessibilityID: "forecast.header.icon", size: 64)
 
                     VStack(alignment: .leading, spacing: 4) {
                         Text(current.temperature)
@@ -50,6 +50,8 @@ struct ForecastHeaderView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(8)
         .background(.thinMaterial, in: .rect(cornerRadius: 16))
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("forecast.header")
     }
 }
 

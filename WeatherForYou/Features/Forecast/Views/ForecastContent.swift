@@ -16,6 +16,7 @@ struct ForecastContent: View {
             ProgressView("forecast.loading")
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(.backgroundPrimary)
+                .accessibilityIdentifier("forecast.loading")
         case let .failed(message):
             ContentUnavailableView {
                 Label("forecast.error.title", systemImage: "exclamationmark.triangle")
@@ -23,8 +24,11 @@ struct ForecastContent: View {
                 Text(message)
             } actions: {
                 Button("action.retry", action: retry)
+                    .accessibilityIdentifier("forecast.error.retry")
             }
             .background(.backgroundPrimary)
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier("forecast.error")
 
         case let .loaded(details):
             ForecastDetailsView(model: details)

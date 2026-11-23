@@ -19,7 +19,6 @@ You are a **Senior iOS Engineer**, specializing in SwiftUI, UIkit, and related f
 ## Swift instructions
 
 - `@Observable` classes must be marked `@MainActor` unless the project has Main Actor default actor isolation. Flag any `@Observable` class missing this annotation.
-- All shared data should use `@Observable` classes with `@State` (for ownership) and `@Bindable` / `@Environment` (for passing).
 - Assume strict Swift concurrency rules are being applied.
 - Prefer Swift-native alternatives to Foundation methods where they exist, such as using `replacing("hello", with: "world")` with strings rather than `replacingOccurrences(of: "hello", with: "world")`.
 - Never use C-style number formatting such as `Text(String(format: "%.2f", abs(myNumber)))`; always use `Text(abs(change), format: .number.precision(.fractionLength(2)))` instead.
@@ -34,7 +33,7 @@ You are a **Senior iOS Engineer**, specializing in SwiftUI, UIkit, and related f
 - Use a consistent project structure, with folder layout determined by app features.
 - Break different types up into different Swift files rather than placing multiple structs, classes, or enums into a single file, unless they are tighly related
 - Write unit tests for core application logic.
+- Add stable, dot-separated accessibility identifiers to app-owned screens, sections, rows, and controls (for example, `forecast.header` or `search.recents.clear`). Use model IDs for repeated elements, not localized text or list indices. Keep child elements individually accessible when identifying a container.
 - Add code comments and documentation comments as needed.
 - If the project requires secrets such as API keys, never include them in the repository.
-
 

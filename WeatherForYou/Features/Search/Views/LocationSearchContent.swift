@@ -15,6 +15,8 @@ struct LocationSearchContent: View {
         content
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(.backgroundPrimary)
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier("search.screen")
     }
 
     @ViewBuilder
@@ -29,15 +31,20 @@ struct LocationSearchContent: View {
                     systemImage: "magnifyingglass",
                     description: Text("search.idle.message")
                 )
+                .accessibilityElement(children: .contain)
+                .accessibilityIdentifier("search.idle")
             }
         case .loading:
             ProgressView("search.loading")
+                .accessibilityIdentifier("search.loading")
         case .empty:
             ContentUnavailableView(
                 "search.empty.title",
                 systemImage: "mappin.slash",
                 description: Text("search.empty.message")
             )
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier("search.empty")
         case let .failed(message):
             ContentUnavailableView {
                 Label("search.error.title", systemImage: "exclamationmark.triangle")
@@ -45,13 +52,18 @@ struct LocationSearchContent: View {
                 Text(message)
             } actions: {
                 Button("action.retry", action: retry)
+                    .accessibilityIdentifier("search.error.retry")
             }
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier("search.error")
         case .loaded:
             List(viewModel.results) { row in
-                LocationListRow(model: row) { onSelect(row) }
+                LocationListRow(model: row, accessibilityScope: "search.results") { onSelect(row) }
             }
             .listStyle(.plain)
             .scrollContentBackground(.hidden)
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier("search.results")
         }
     }
 
@@ -59,7 +71,7 @@ struct LocationSearchContent: View {
         List {
             Section {
                 ForEach(viewModel.recentLocations) { row in
-                    LocationListRow(model: row) { onSelect(row) }
+                    LocationListRow(model: row, accessibilityScope: "search.recents") { onSelect(row) }
                 }
                 .onDelete { indexSet in
                     let rows = indexSet.map { viewModel.recentLocations[$0] }
@@ -81,11 +93,14 @@ struct LocationSearchContent: View {
                     }
                     .font(.footnote)
                     .textCase(nil)
+                    .accessibilityIdentifier("search.recents.clear")
                 }
             }
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("search.recents")
     }
 
     private func retry() {

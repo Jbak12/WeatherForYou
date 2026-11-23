@@ -35,6 +35,8 @@ struct LocationRow: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(12)
         .background(.thinMaterial, in: .rect(cornerRadius: 12))
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("search.location.card.\(model.id)")
     }
 }
 

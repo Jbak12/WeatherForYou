@@ -19,22 +19,28 @@ struct CurrentConditionsView: View {
                 GridRow {
                     Label("forecast.conditions.humidity", systemImage: "humidity")
                     Text(model.humidity)
+                        .accessibilityIdentifier("forecast.conditions.humidity")
                 }
                 GridRow {
                     Label("forecast.conditions.wind", systemImage: "wind")
                     Text(model.wind)
+                        .accessibilityIdentifier("forecast.conditions.wind")
                 }
                 GridRow {
                     Label("forecast.conditions.gusts", systemImage: "wind")
                     Text(model.gusts)
+                        .accessibilityIdentifier("forecast.conditions.gusts")
                 }
                 GridRow {
                     Label("forecast.conditions.precipitation", systemImage: "drop.fill")
                     Text(model.precipitation)
+                        .accessibilityIdentifier("forecast.conditions.precipitation")
                 }
             }
             .font(.subheadline)
         }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("forecast.conditions")
     }
 }
 

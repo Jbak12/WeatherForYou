@@ -10,13 +10,17 @@ import SwiftUI
 struct HourlyForecastCell: View {
     let model: HourlyForecastCellModel
 
+    private var accessibilityID: String {
+        "forecast.hourly.row.\(Int(model.id.timeIntervalSince1970))"
+    }
+
     var body: some View {
         VStack(spacing: 8) {
             Text(model.time)
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
-            WeatherIcon(model: model.icon)
+            WeatherIcon(model: model.icon, accessibilityID: "\(accessibilityID).icon")
 
             Text(model.temperature)
                 .font(.subheadline.weight(.semibold))
@@ -32,6 +36,8 @@ struct HourlyForecastCell: View {
         }
         .frame(width: 56)
         .padding(.vertical, 8)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier(accessibilityID)
     }
 }
 

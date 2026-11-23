@@ -26,6 +26,8 @@ struct DailyForecastSection: View {
                     }
                 }
             }
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier("forecast.daily")
         }
     }
 }

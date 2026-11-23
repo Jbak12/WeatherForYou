@@ -10,6 +10,7 @@ import SwiftUI
 /// A selectable location card with list-row styling.
 struct LocationListRow: View {
     let model: LocationRowModel
+    let accessibilityScope: String
     let onSelect: () -> Void
 
     var body: some View {
@@ -25,6 +26,7 @@ struct LocationListRow: View {
             .contentShape(.rect)
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("\(accessibilityScope).row.\(model.id)")
         .listRowBackground(Color.backgroundPrimary)
         .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
         .listRowSeparator(.hidden)
@@ -34,7 +36,7 @@ struct LocationListRow: View {
 #if DEBUG
 #Preview("Location in a list") {
     List {
-        LocationListRow(model: LocationRowModel(location: .preview), onSelect: {})
+        LocationListRow(model: LocationRowModel(location: .preview), accessibilityScope: "search.results", onSelect: {})
     }
     .listStyle(.plain)
     .scrollContentBackground(.hidden)

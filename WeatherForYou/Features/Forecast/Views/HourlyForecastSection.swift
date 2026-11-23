@@ -24,6 +24,8 @@ struct HourlyForecastSection: View {
                     }
                 }
             }
+            .accessibilityElement(children: .contain)
+            .accessibilityIdentifier("forecast.hourly")
         }
     }
 }

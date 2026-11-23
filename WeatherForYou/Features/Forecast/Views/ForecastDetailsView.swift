@@ -26,6 +26,8 @@ struct ForecastDetailsView: View {
         }
         .background(.backgroundPrimary)
         .foregroundStyle(.textPrimary)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("forecast.details")
     }
 }
 
