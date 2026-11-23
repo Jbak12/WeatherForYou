@@ -67,13 +67,13 @@ struct OpenMeteoForecastService: ForecastService {
             ]
         )
 
-        let response: ForecastResponse = try await client.send(request)
+        let response: ForecastDto = try await client.send(request)
         return makeForecast(from: response)
     }
 }
 
 private extension OpenMeteoForecastService {
-    func makeForecast(from response: ForecastResponse) -> Forecast {
+    func makeForecast(from response: ForecastDto) -> Forecast {
         let timeZone = TimeZone(identifier: response.timezone) ?? .current
 
         let units = Forecast.Units(
@@ -94,7 +94,7 @@ private extension OpenMeteoForecastService {
     }
 
     func makeCurrent(
-        _ dto: ForecastResponse.Current?
+        _ dto: ForecastDto.Current?
     ) -> Forecast.CurrentConditions? {
         guard let dto, let temperature = dto.temperature2m else { return nil }
 
@@ -113,7 +113,7 @@ private extension OpenMeteoForecastService {
     }
 
     func makeHourly(
-        _ dto: ForecastResponse.Hourly?
+        _ dto: ForecastDto.Hourly?
     ) -> [Forecast.HourlyEntry] {
         guard let dto else { return [] }
 
@@ -146,7 +146,7 @@ private extension OpenMeteoForecastService {
     }
 
     func makeDaily(
-        _ dto: ForecastResponse.Daily?
+        _ dto: ForecastDto.Daily?
     ) -> [Forecast.DailyEntry] {
         guard let dto else { return [] }
 

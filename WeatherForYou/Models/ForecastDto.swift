@@ -12,7 +12,7 @@ import Foundation
 ///
 /// Every timestamp is an integer number of seconds since 1970, including
 /// `sunrise` and `sunset`.
-struct ForecastResponse: Decodable, Sendable {
+struct ForecastDto: Decodable, Sendable {
     let latitude: Double
     let longitude: Double
     let elevation: Double?

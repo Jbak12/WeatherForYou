@@ -85,7 +85,7 @@ final class ForecastServiceTests: XCTestCase {
         """
 
         let response = try JSONDecoder().decode(
-            ForecastResponse.self,
+            ForecastDto.self,
             from: Data(json.utf8)
         )
 
@@ -237,10 +237,10 @@ final class ForecastServiceTests: XCTestCase {
     private func makeResponse(
         hourCount: Int = 30,
         dayCount: Int = 7
-    ) -> ForecastResponse {
+    ) -> ForecastDto {
         let base = 1_795_380_000
 
-        let current = ForecastResponse.Current(
+        let current = ForecastDto.Current(
             time: base,
             interval: 900,
             temperature2m: 3.3,
@@ -266,7 +266,7 @@ final class ForecastServiceTests: XCTestCase {
             $0 % 24 < 6 ? 0 : 1
         }
 
-        let hourly = ForecastResponse.Hourly(
+        let hourly = ForecastDto.Hourly(
             time: (0..<hourCount).map { base + $0 * 3_600 },
             temperature2m: hourlyTemperatures,
             weatherCode: hourlyWeatherCodes,
@@ -293,7 +293,7 @@ final class ForecastServiceTests: XCTestCase {
         let dailyProbabilities: [Int?] = (0..<dayCount).map { _ in 20 }
         let dailyWindSpeeds: [Double?] = (0..<dayCount).map { _ in 18 }
 
-        let daily = ForecastResponse.Daily(
+        let daily = ForecastDto.Daily(
             time: (0..<dayCount).map { base + $0 * 86_400 },
             weatherCode: dailyWeatherCodes,
             temperature2mMax: dailyMaxTemperatures,
@@ -304,7 +304,7 @@ final class ForecastServiceTests: XCTestCase {
             windSpeed10mMax: dailyWindSpeeds
         )
 
-        return ForecastResponse(
+        return ForecastDto(
             latitude: 52.52437,
             longitude: 13.41053,
             elevation: 74,

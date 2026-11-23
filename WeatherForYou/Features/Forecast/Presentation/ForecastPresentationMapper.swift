@@ -77,7 +77,7 @@ struct ForecastPresentationMapper {
     }
 
     private func probability(_ value: Int?) -> String? {
-        guard let value, value > 0 else { return nil }
+        guard let value, value >= 0 else { return nil }
         return (Double(value) / 100).formatted(.percent.precision(.fractionLength(0)).locale(locale))
     }
 
