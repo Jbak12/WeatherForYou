@@ -11,15 +11,15 @@ WeatherForYou is an iOS app for looking up a city's current weather and forecast
 
 ## Localization
 
-App copy uses semantic keys in `Resources/Localizable.xcstrings`. English is
+App copy uses semantic keys in `WeatherForYou/Resources/Localizable.xcstrings`. English is
 the only supported language. Add translations in the catalog, and keep complete
 sentences together when they contain placeholders. The launch storyboard uses
-`en.lproj/LaunchScreen.strings` for its tagline. Place names and other API data
+`WeatherForYou/en.lproj/LaunchScreen.strings` for its tagline. Place names and other API data
 are displayed as supplied by the service.
 
 ## Architecture
 
-The app is organized by feature within one Xcode target:
+The app source under `WeatherForYou/` is organized by feature within one Xcode target:
 
 - `App/` owns the entry point, root navigation, and live dependency wiring.
 - `Features/Locations/` owns Search and Recents, including geocoding and the
@@ -115,7 +115,7 @@ file above).
 
 ## Static URL macro
 
-The app uses a local Swift macro package, [`StaticURL`](../StaticURL), to validate
+The app uses a local Swift macro package, [`StaticURL`](StaticURL), to validate
 URL literals at compile time:
 
 ```swift
