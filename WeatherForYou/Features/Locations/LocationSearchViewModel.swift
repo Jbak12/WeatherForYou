@@ -19,7 +19,7 @@ final class LocationSearchViewModel: ObservableObject {
         case failed(String)
     }
 
-    @Published var query = ""
+    @Published private var searchText = ""
     @Published private(set) var results: [LocationRowModel] = []
     @Published private(set) var state: State = .idle
     @Published private(set) var recentLocations: [LocationRowModel] = []
@@ -35,6 +35,13 @@ final class LocationSearchViewModel: ObservableObject {
     init(repository: LocationRepository, debounce: Duration = .milliseconds(300)) {
         self.repository = repository
         self.debounce = debounce
+    }
+
+    var query: String {
+        get { searchText }
+        set {
+            searchText = newValue.filter { $0.isLetter || $0 == " " || $0 == "-" }
+        }
     }
 
     var trimmedQuery: String {

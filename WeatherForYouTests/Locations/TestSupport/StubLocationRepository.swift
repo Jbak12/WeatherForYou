@@ -13,10 +13,12 @@ final class StubLocationRepository: LocationRepository {
     var searchResults: [LocationDto] = []
     var recents: [LocationDto] = []
     var error: Error?
+    private(set) var searchedQueries: [String] = []
     private(set) var recorded: [LocationDto] = []
     private(set) var removedIDs: [Int] = []
 
     func searchLocations(matching query: String) async throws -> [LocationDto] {
+        searchedQueries.append(query)
         if let error { throw error }
         return searchResults
     }
