@@ -75,8 +75,9 @@ instead of crashing.
 
 **Schema**
 
-`recent_location` stores the location's API fields plus `last_viewed_at`, which
-drives ordering. `postcodes` is stored as a JSON array in a text column.
+`recent_location` stores the location ID, name, coordinates, timezone, region,
+and country, plus `last_viewed_at` for ordering. The v2 migration removes unused
+API fields without discarding existing history.
 
 **Layering**
 

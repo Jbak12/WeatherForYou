@@ -15,22 +15,9 @@ extension LocationDto {
         name: "Berlin",
         latitude: 52.52437,
         longitude: 13.41053,
-        elevation: 74,
-        featureCode: "PPLC",
-        countryCode: "DE",
-        admin1Id: 2_950_157,
-        admin2Id: nil,
-        admin3Id: nil,
-        admin4Id: nil,
         timezone: "Europe/Berlin",
-        population: 3_426_354,
-        postcodes: nil,
-        countryId: 2_921_044,
         country: "Germany",
-        admin1: "Land Berlin",
-        admin2: nil,
-        admin3: nil,
-        admin4: nil
+        admin1: "Land Berlin"
     )
 }
 

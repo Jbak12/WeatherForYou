@@ -105,7 +105,6 @@ final class GeocodingServiceTests: XCTestCase {
                     "latitude": 52.52437,
                     "longitude": 13.41053,
                     "country_code": "DE",
-                    "timezone": "Europe/Berlin",
                     "country": "Germany",
                     "admin1": "Berlin"
                 }
@@ -121,11 +120,8 @@ final class GeocodingServiceTests: XCTestCase {
         let location = try XCTUnwrap(response.results.first)
         XCTAssertEqual(location.id, 2_950_159)
         XCTAssertEqual(location.name, "Berlin")
-        XCTAssertEqual(location.countryCode, "DE")
         XCTAssertEqual(location.subtitle, "Berlin, Germany")
-        XCTAssertNil(location.elevation)
-        XCTAssertNil(location.admin2)
-        XCTAssertNil(location.postcodes)
+        XCTAssertNil(location.timezone)
     }
 
     func testDecodesMissingResultsAsEmpty() throws {

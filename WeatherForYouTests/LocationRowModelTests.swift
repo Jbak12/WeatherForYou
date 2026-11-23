@@ -63,22 +63,9 @@ final class LocationRowModelTests: XCTestCase {
             name: "Warsaw",
             latitude: latitude,
             longitude: longitude,
-            elevation: nil,
-            featureCode: nil,
-            countryCode: "PL",
-            admin1Id: nil,
-            admin2Id: nil,
-            admin3Id: nil,
-            admin4Id: nil,
             timezone: timezone,
-            population: nil,
-            postcodes: nil,
-            countryId: nil,
             country: country,
-            admin1: admin1,
-            admin2: nil,
-            admin3: nil,
-            admin4: nil
+            admin1: admin1
         )
     }
 }

@@ -5,6 +5,7 @@
 //  Created by Jakub Bakalarz on 23/11/2026.
 //
 
+import GRDB
 import XCTest
 @testable import WeatherForYou
 
@@ -13,16 +14,48 @@ final class RecentLocationStoreTests: XCTestCase {
 
     func testRecordAndFetchRoundTripsLocation() async throws {
         let store = GRDBRecentLocationStore(database: try AppDatabase.inMemory())
-        let location = makeLocation(
-            id: 1,
-            name: "Warsaw",
-            postcodes: ["00-001", "00-002"]
-        )
+        let location = makeLocation(id: 1, name: "Warsaw")
 
         try await store.record(location)
         let recents = try await store.recentLocations(limit: 10)
 
         XCTAssertEqual(recents, [location])
+    }
+
+    func testMigratesV1HistoryWithoutLosingRecentLocations() async throws {
+        let writer = try DatabaseQueue()
+        try AppDatabase.migrator.migrate(writer, upTo: "v1_recent_locations")
+        let location = makeLocation(id: 1, name: "Warsaw")
+        let locationID = location.id
+        let viewedAt = Date(timeIntervalSince1970: 1_800_000_000)
+        let arguments: StatementArguments = [
+            locationID, location.name, location.latitude, location.longitude,
+            location.timezone, location.country, location.admin1, viewedAt, "[\"00-001\"]"
+        ]
+
+        try await writer.write { db in
+            try db.execute(
+                sql: """
+                    INSERT INTO recent_location
+                    (id, name, latitude, longitude, timezone, country, admin1, last_viewed_at, postcodes)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                arguments: arguments
+            )
+        }
+
+        let database = try AppDatabase(writer)
+        let store = GRDBRecentLocationStore(database: database)
+        let recents = try await store.recentLocations(limit: 10)
+        XCTAssertEqual(recents, [location])
+
+        let (columns, savedDate) = try await writer.read { db in
+            let columns = try db.columns(in: "recent_location").map(\.name)
+            let savedDate = try RecentLocationRecord.fetchOne(db, key: locationID)?.lastViewedAt
+            return (columns, savedDate)
+        }
+        XCTAssertEqual(Set(columns), ["id", "name", "latitude", "longitude", "timezone", "country", "admin1", "last_viewed_at"])
+        XCTAssertEqual(savedDate, viewedAt)
     }
 
     func testRecordingSameLocationUpdatesRecencyWithoutDuplicating() async throws {
@@ -90,32 +123,15 @@ final class RecentLocationStoreTests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func makeLocation(
-        id: Int,
-        name: String,
-        postcodes: [String]? = nil
-    ) -> LocationDto {
+    private func makeLocation(id: Int, name: String) -> LocationDto {
         LocationDto(
             id: id,
             name: name,
             latitude: 52.2297,
             longitude: 21.0122,
-            elevation: 113,
-            featureCode: "PPLC",
-            countryCode: "PL",
-            admin1Id: 1_234,
-            admin2Id: nil,
-            admin3Id: nil,
-            admin4Id: nil,
             timezone: "Europe/Warsaw",
-            population: 1_790_658,
-            postcodes: postcodes,
-            countryId: 2_345,
             country: "Poland",
-            admin1: "Masovia",
-            admin2: nil,
-            admin3: nil,
-            admin4: nil
+            admin1: "Masovia"
         )
     }
 }

@@ -43,8 +43,8 @@ final class AppDatabase {
     }
 }
 
-private extension AppDatabase {
-    static func openDefault() throws -> AppDatabase {
+extension AppDatabase {
+    private static func openDefault() throws -> AppDatabase {
         let fileManager = FileManager.default
         let folder = try fileManager
             .url(
@@ -89,6 +89,24 @@ private extension AppDatabase {
                 table.column("admin3", .text)
                 table.column("admin4", .text)
                 table.column("last_viewed_at", .datetime).notNull()
+            }
+        }
+
+        migrator.registerMigration("v2_trim_recent_locations") { db in
+            try db.alter(table: "recent_location") { table in
+                table.drop(column: "elevation")
+                table.drop(column: "feature_code")
+                table.drop(column: "country_code")
+                table.drop(column: "admin1_id")
+                table.drop(column: "admin2_id")
+                table.drop(column: "admin3_id")
+                table.drop(column: "admin4_id")
+                table.drop(column: "population")
+                table.drop(column: "postcodes")
+                table.drop(column: "country_id")
+                table.drop(column: "admin2")
+                table.drop(column: "admin3")
+                table.drop(column: "admin4")
             }
         }
 

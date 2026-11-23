@@ -26,8 +26,8 @@ struct GRDBRecentLocationStore: RecentLocationStore {
         guard let database else { return [] }
 
         return try await database.writer.read { db in
-            try RecentLocationRow
-                .order(Column("last_viewed_at").desc)
+            try RecentLocationRecord
+                .order(RecentLocationRecord.lastViewedAtColumn.desc)
                 .limit(limit)
                 .fetchAll(db)
                 .map(\.location)
@@ -37,10 +37,9 @@ struct GRDBRecentLocationStore: RecentLocationStore {
     func record(_ location: LocationDto) async throws {
         guard let database else { return }
 
-        let row = RecentLocationRow(location: location, lastViewedAt: now())
+        let record = RecentLocationRecord(location: location, lastViewedAt: now())
         try await database.writer.write { db in
-            var row = row
-            try row.upsert(db)
+            try record.upsert(db)
         }
     }
 
@@ -48,7 +47,7 @@ struct GRDBRecentLocationStore: RecentLocationStore {
         guard let database else { return }
 
         try await database.writer.write { db in
-            _ = try RecentLocationRow.deleteOne(db, key: locationID)
+            _ = try RecentLocationRecord.deleteOne(db, key: locationID)
         }
     }
 
@@ -56,7 +55,7 @@ struct GRDBRecentLocationStore: RecentLocationStore {
         guard let database else { return }
 
         try await database.writer.write { db in
-            _ = try RecentLocationRow.deleteAll(db)
+            _ = try RecentLocationRecord.deleteAll(db)
         }
     }
 }
