@@ -276,7 +276,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Search for a city"
+            "value" : "Search for a place"
           }
         }
       }
@@ -296,7 +296,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Search cities"
+            "value" : "Search place"
           }
         }
       }

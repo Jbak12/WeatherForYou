@@ -1,5 +1,14 @@
 # WeatherForYou Project
 
+WeatherForYou is an iOS app for looking up a city's current weather and forecast using [Open-Meteo](https://open-meteo.com/).
+
+## Features
+
+- **City search:** Type at least two characters to find a location. Names can include accented letters, spaces, and hyphens, as in “Nowy Sącz” or “Bielsko-Biała”. Results show coordinates and, when available, the region and country to help distinguish places with the same name.
+- **Current conditions:** See the temperature, what it feels like, today's high and low, humidity, wind, gusts, and precipitation when available.
+- **Hourly and daily forecasts:** Scroll through up to 24 hourly entries starting with the current hour, or check the seven-day outlook for highs, lows, and the chance of precipitation. Forecast times and the “Today” label use the city's time zone.
+- **Recent locations:** Clear the search field to revisit up to 10 cities whose forecasts loaded successfully. History is saved on the device. Swipe to remove one city or tap **Clear** to remove them all.
+
 ## Localization
 
 App copy uses semantic keys in `Resources/Localizable.xcstrings`. English is
