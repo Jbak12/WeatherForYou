@@ -26,45 +26,65 @@ struct LocationSearchContent: View {
             if viewModel.trimmedQuery.isEmpty, !viewModel.recentLocations.isEmpty {
                 recentList
             } else {
-                ContentUnavailableView(
-                    "search.idle.title",
-                    systemImage: "magnifyingglass",
-                    description: Text("search.idle.message")
-                )
-                .accessibilityElement(children: .contain)
-                .accessibilityIdentifier("search.idle")
+                idleView
             }
         case .loading:
-            ProgressView("search.loading")
-                .accessibilityIdentifier("search.loading")
+            loadingView
         case .empty:
-            ContentUnavailableView(
-                "search.empty.title",
-                systemImage: "mappin.slash",
-                description: Text("search.empty.message")
-            )
-            .accessibilityElement(children: .contain)
-            .accessibilityIdentifier("search.empty")
+            emptyView
         case let .failed(message):
-            ContentUnavailableView {
-                Label("search.error.title", systemImage: "exclamationmark.triangle")
-            } description: {
-                Text(message)
-            } actions: {
-                Button("action.retry", action: retry)
-                    .accessibilityIdentifier("search.error.retry")
-            }
-            .accessibilityElement(children: .contain)
-            .accessibilityIdentifier("search.error")
+            errorView(message: message)
         case .loaded:
-            List(viewModel.results) { row in
-                LocationListRow(model: row, accessibilityScope: "search.results") { onSelect(row) }
-            }
-            .listStyle(.plain)
-            .scrollContentBackground(.hidden)
-            .accessibilityElement(children: .contain)
-            .accessibilityIdentifier("search.results")
+            resultsList
         }
+    }
+
+    private var idleView: some View {
+        ContentUnavailableView(
+            "search.idle.title",
+            systemImage: "magnifyingglass",
+            description: Text("search.idle.message")
+        )
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("search.idle")
+    }
+
+    private var loadingView: some View {
+        ProgressView("search.loading")
+            .accessibilityIdentifier("search.loading")
+    }
+
+    private var emptyView: some View {
+        ContentUnavailableView(
+            "search.empty.title",
+            systemImage: "mappin.slash",
+            description: Text("search.empty.message")
+        )
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("search.empty")
+    }
+
+    private func errorView(message: String) -> some View {
+        ContentUnavailableView {
+            Label("search.error.title", systemImage: "exclamationmark.triangle")
+        } description: {
+            Text(message)
+        } actions: {
+            Button("action.retry", action: retry)
+                .accessibilityIdentifier("search.error.retry")
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("search.error")
+    }
+
+    private var resultsList: some View {
+        List(viewModel.results) { row in
+            LocationListRow(model: row, accessibilityScope: "search.results") { onSelect(row) }
+        }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("search.results")
     }
 
     private var recentList: some View {

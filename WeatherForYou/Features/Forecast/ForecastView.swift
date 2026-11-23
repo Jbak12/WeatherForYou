@@ -46,25 +46,33 @@ struct ForecastView: View {
     private var content: some View {
         switch model.state {
         case .idle, .loading:
-            ProgressView("forecast.loading")
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(.backgroundPrimary)
-                .accessibilityIdentifier("forecast.loading")
+            loadingView
         case let .failed(message):
-            ContentUnavailableView {
-                Label("forecast.error.title", systemImage: "exclamationmark.triangle")
-            } description: {
-                Text(message)
-            } actions: {
-                Button("action.retry") { retryCount += 1 }
-                    .accessibilityIdentifier("forecast.error.retry")
-            }
-            .background(.backgroundPrimary)
-            .accessibilityElement(children: .contain)
-            .accessibilityIdentifier("forecast.error")
+            errorView(message: message)
         case let .loaded(details):
             ForecastDetailsView(model: details)
         }
+    }
+
+    private var loadingView: some View {
+        ProgressView("forecast.loading")
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(.backgroundPrimary)
+            .accessibilityIdentifier("forecast.loading")
+    }
+
+    private func errorView(message: String) -> some View {
+        ContentUnavailableView {
+            Label("forecast.error.title", systemImage: "exclamationmark.triangle")
+        } description: {
+            Text(message)
+        } actions: {
+            Button("action.retry") { retryCount += 1 }
+                .accessibilityIdentifier("forecast.error.retry")
+        }
+        .background(.backgroundPrimary)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("forecast.error")
     }
 }
 
