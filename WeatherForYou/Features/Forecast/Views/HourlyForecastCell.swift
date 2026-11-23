@@ -26,22 +26,20 @@ struct HourlyForecastCell: View {
                 .font(.subheadline.weight(.semibold))
 
             if let precipitation = model.precipitation {
-                Label(precipitation, systemImage: "drop.fill")
-                    .font(.caption2)
-                    .foregroundStyle(.blue)
+                PrecipitationLabel(value: precipitation)
             } else {
                 Text(" ")
                     .font(.caption2)
             }
         }
-        .frame(width: 56)
+        .frame(minWidth: 56)
         .padding(.vertical, 8)
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier(accessibilityID)
     }
 }
 
-#Preview("With and without precipitation") {
+#Preview("Hourly temperatures and precipitation") {
     HStack(spacing: 8) {
         ForEach(ForecastDetailsModel.preview.hourly.prefix(2)) { entry in
             HourlyForecastCell(model: entry)

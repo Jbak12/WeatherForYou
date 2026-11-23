@@ -33,6 +33,7 @@ struct ForecastView: View {
 
     var body: some View {
         content
+            .background(.backgroundPrimary)
             .accessibilityElement(children: .contain)
             .accessibilityIdentifier("forecast.screen")
             .navigationTitle(name)
@@ -57,7 +58,6 @@ struct ForecastView: View {
     private var loadingView: some View {
         ProgressView("forecast.loading")
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(.backgroundPrimary)
             .accessibilityIdentifier("forecast.loading")
     }
 
@@ -70,7 +70,6 @@ struct ForecastView: View {
             Button("action.retry") { retryCount += 1 }
                 .accessibilityIdentifier("forecast.error.retry")
         }
-        .background(.backgroundPrimary)
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("forecast.error")
     }

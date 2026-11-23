@@ -24,7 +24,6 @@ struct ForecastDetailsView: View {
             }
             .padding()
         }
-        .background(.backgroundPrimary)
         .foregroundStyle(.textPrimary)
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("forecast.details")
@@ -33,4 +32,5 @@ struct ForecastDetailsView: View {
 
 #Preview("Forecast details") {
     ForecastDetailsView(model: .preview)
+        .background(.backgroundPrimary)
 }

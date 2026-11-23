@@ -81,8 +81,7 @@ struct LocationSearchContent: View {
         List(viewModel.results) { row in
             LocationListRow(model: row, accessibilityScope: "search.results") { onSelect(row) }
         }
-        .listStyle(.plain)
-        .scrollContentBackground(.hidden)
+        .locationListStyle()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("search.results")
     }
@@ -125,8 +124,7 @@ struct LocationSearchContent: View {
                 }
             }
         }
-        .listStyle(.plain)
-        .scrollContentBackground(.hidden)
+        .locationListStyle()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("search.recents")
     }

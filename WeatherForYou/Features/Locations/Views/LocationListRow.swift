@@ -38,8 +38,7 @@ struct LocationListRow: View {
     List {
         LocationListRow(model: LocationRowModel(location: .preview), accessibilityScope: "search.results", onSelect: {})
     }
-    .listStyle(.plain)
-    .scrollContentBackground(.hidden)
+    .locationListStyle()
     .background(.backgroundPrimary)
 }
 #endif
