@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CurrentCOnditionsView: View {
+struct CurrentConditionsView: View {
     let current: Forecast.CurrentConditions
     let units: Forecast.Units
 
