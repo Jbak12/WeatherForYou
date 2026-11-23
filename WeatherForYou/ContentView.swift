@@ -8,20 +8,29 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var model = LocationSearchModel()
-    @State private var path = NavigationPath()
+    @StateObject private var model = LocationSearchViemodel()
+    @State private var path: [LocationRoute] = []
+    @State private var selectedRow: LocationRowModel?
 
     var body: some View {
         NavigationStack(path: $path) {
-            LocationSearchContent(model: model)
+            LocationSearchContent(viewModel: model, onSelect: selectLocation)
                 .navigationTitle("Places")
                 .searchable(
                     text: $model.query,
                     placement: .navigationBarDrawer(displayMode: .always),
                     prompt: "Search cities"
                 )
-                .navigationDestination(for: LocationDto.self) { location in
-                    ForecastView(location: location)
+                .navigationDestination(for: LocationRoute.self) { route in
+                    switch route {
+                    case let .details(latitude, longitude):
+                        ForecastView(
+                            coordinates: Coordinates(latitude: latitude, longitude: longitude),
+                            name: selectedRow?.name ?? String(localized: "Forecast"),
+                            subtitle: selectedRow?.subtitle,
+                            onLoad: model.recentLocationRecorder()
+                        )
+                    }
                 }
         }
         .task {
@@ -37,6 +46,13 @@ struct ContentView: View {
 
             Task { await model.loadRecentLocations() }
         }
+    }
+
+    private func selectLocation(_ row: LocationRowModel) {
+        guard path.isEmpty, let coordinates = model.selectLocation(id: row.id) else { return }
+
+        selectedRow = row
+        path.append(.details(latitude: coordinates.latitude, longitude: coordinates.longitude))
     }
 }
 

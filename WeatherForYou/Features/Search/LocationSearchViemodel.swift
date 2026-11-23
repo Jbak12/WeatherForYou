@@ -10,7 +10,7 @@ import Combine
 
 /// Drives the location search screen: owns the query, results, and load state.
 @MainActor
-final class LocationSearchModel: ObservableObject {
+final class LocationSearchViemodel: ObservableObject {
     enum State: Equatable {
         case idle
         case loading
@@ -28,6 +28,9 @@ final class LocationSearchModel: ObservableObject {
 
     private let repository: LocationRepository
     private let debounce: Duration
+    private var searchLocations: [LocationDto] = []
+    private var storedRecentLocations: [LocationDto] = []
+    private var selectedLocation: LocationDto?
 
     /// Creates a model backed by the default location repository.
     ///
@@ -47,12 +50,29 @@ final class LocationSearchModel: ObservableObject {
         query.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
+    func selectLocation(id: Int) -> Coordinates? {
+        let locations = state == .loaded ? searchLocations : storedRecentLocations
+        selectedLocation = locations.first { $0.id == id }
+        guard let selectedLocation else { return nil }
+
+        return Coordinates(latitude: selectedLocation.latitude, longitude: selectedLocation.longitude)
+    }
+
+    /// Capture the selection so later list refreshes cannot change what gets recorded.
+    func recentLocationRecorder() -> @MainActor () async -> Void {
+        { [repository, selectedLocation] in
+            guard let selectedLocation else { return }
+            try? await repository.recordView(of: selectedLocation)
+        }
+    }
+
     /// Reloads the recently viewed locations.
     func loadRecentLocations() async {
         let locations = (try? await repository.recentLocations(
             limit: Self.recentLimit
         )) ?? []
 
+        storedRecentLocations = locations
         recentLocations = locations.map { LocationRowModel(location: $0) }
     }
 
@@ -60,6 +80,7 @@ final class LocationSearchModel: ObservableObject {
     func removeRecentLocation(_ row: LocationRowModel) async {
         do {
             try await repository.removeRecentLocation(id: row.id)
+            storedRecentLocations.removeAll { $0.id == row.id }
             recentLocations.removeAll { $0.id == row.id }
         } catch {
             // Keep the row visible when the deletion fails.
@@ -70,6 +91,7 @@ final class LocationSearchModel: ObservableObject {
     func clearRecentLocations() async {
         do {
             try await repository.clearRecentLocations()
+            storedRecentLocations = []
             recentLocations = []
         } catch {
             // Keep the rows visible when the deletion fails.
@@ -84,6 +106,7 @@ final class LocationSearchModel: ObservableObject {
         let text = trimmedQuery
 
         guard text.count >= 2 else {
+            searchLocations = []
             results = []
             state = .idle
             return
@@ -101,6 +124,7 @@ final class LocationSearchModel: ObservableObject {
             // The query may have changed while the request was in flight.
             guard text == trimmedQuery else { return }
 
+            searchLocations = locations
             results = locations.map { LocationRowModel(location: $0) }
             state = locations.isEmpty ? .empty : .loaded
         } catch is CancellationError {
@@ -108,6 +132,7 @@ final class LocationSearchModel: ObservableObject {
         } catch {
             guard text == trimmedQuery else { return }
 
+            searchLocations = []
             results = []
             state = .failed(error.localizedDescription)
         }

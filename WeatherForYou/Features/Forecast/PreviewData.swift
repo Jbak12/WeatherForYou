@@ -114,7 +114,7 @@ extension Forecast {
 
 /// A `ForecastRepository` that returns the sample forecast without networking.
 struct PreviewForecastRepository: ForecastRepository {
-    func forecast(for location: LocationDto) async throws -> Forecast {
+    func forecast(at coordinates: Coordinates) async throws -> Forecast {
         .preview
     }
 }

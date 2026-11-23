@@ -9,5 +9,5 @@ import Foundation
 
 /// Loads a weather forecast for a location.
 protocol ForecastService {
-    func forecast(for location: LocationDto) async throws -> Forecast
+    func forecast(at coordinates: Coordinates) async throws -> Forecast
 }

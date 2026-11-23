@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct ForecastDetailsView: View {
-    let location: LocationDto
+    let name: String
+    let subtitle: String?
     let forecast: Forecast
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                ForecastHeaderView(location: location, forecast: forecast)
+                ForecastHeaderView(name: name, subtitle: subtitle, forecast: forecast)
 
                 if let current = forecast.current {
                     CurrentConditionsCard(current: current, units: forecast.units)
@@ -38,5 +39,5 @@ struct ForecastDetailsView: View {
 }
 
 #Preview {
-    ForecastDetailsView(location: .preview, forecast: .preview)
+    ForecastDetailsView(name: "Berlin", subtitle: "Land Berlin, Germany", forecast: .preview)
 }

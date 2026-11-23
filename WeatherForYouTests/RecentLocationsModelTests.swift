@@ -56,9 +56,40 @@ final class RecentLocationsModelTests: XCTestCase {
         XCTAssertTrue(model.recentLocations.isEmpty)
     }
 
+    func testSelectingRecentUsesRawCoordinates() async {
+        let repository = StubLocationRepository()
+        repository.recents = [.preview]
+        let model = makeModel(repository: repository)
+        await model.loadRecentLocations()
+
+        XCTAssertEqual(
+            model.selectLocation(id: LocationDto.preview.id),
+            Coordinates(latitude: 52.52437, longitude: 13.41053)
+        )
+    }
+
+    func testSearchSelectionRecorderSurvivesResultsBeingCleared() async {
+        let repository = StubLocationRepository()
+        repository.searchResults = [.preview]
+        let model = LocationSearchViemodel(repository: repository, debounce: .zero)
+        model.query = "Berlin"
+        await model.search()
+
+        XCTAssertEqual(
+            model.selectLocation(id: LocationDto.preview.id),
+            Coordinates(latitude: 52.52437, longitude: 13.41053)
+        )
+        let recordView = model.recentLocationRecorder()
+        model.query = ""
+        await model.search()
+        await recordView()
+
+        XCTAssertEqual(repository.recorded, [.preview])
+    }
+
     // MARK: - Helpers
 
-    private func makeModel(repository: StubLocationRepository) -> LocationSearchModel {
-        LocationSearchModel(repository: repository)
+    private func makeModel(repository: StubLocationRepository) -> LocationSearchViemodel {
+        LocationSearchViemodel(repository: repository)
     }
 }

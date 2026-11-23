@@ -48,23 +48,20 @@ struct OpenMeteoForecastService: ForecastService {
     private let now: () -> Date
 
     init(
-        client: APIClient? = nil,
+        client: APIClient = DefaultAPIClient(baseURL: Self.baseURL),
         now: @escaping () -> Date = { .now }
     ) {
-        if let client {
             self.client = client
-        } else {
-            self.client = DefaultAPIClient(baseURL: Self.baseURL)
-        }
+       
         self.now = now
     }
 
-    func forecast(for location: LocationDto) async throws -> Forecast {
+    func forecast(at coordinates: Coordinates) async throws -> Forecast {
         let request = APIRequest(
             path: "/v1/forecast",
             queryItems: [
-                URLQueryItem(name: "latitude", value: String(location.latitude)),
-                URLQueryItem(name: "longitude", value: String(location.longitude)),
+                URLQueryItem(name: "latitude", value: String(coordinates.latitude)),
+                URLQueryItem(name: "longitude", value: String(coordinates.longitude)),
                 URLQueryItem(name: "current", value: Self.currentVariables),
                 URLQueryItem(name: "hourly", value: Self.hourlyVariables),
                 URLQueryItem(name: "daily", value: Self.dailyVariables),

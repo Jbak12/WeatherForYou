@@ -64,14 +64,15 @@ final class RepositoryTests: XCTestCase {
 
     // MARK: - Forecast
 
-    func testForecastRepositoryForwardsLocationToService() async throws {
+    func testForecastRepositoryForwardsCoordinatesToService() async throws {
         let service = StubForecastService()
         service.result = .preview
         let repository = DefaultForecastRepository(service: service)
 
-        let forecast = try await repository.forecast(for: .preview)
+        let coordinates = Coordinates(latitude: 52.52437, longitude: 13.41053)
+        let forecast = try await repository.forecast(at: coordinates)
 
-        XCTAssertEqual(service.locations, [.preview])
+        XCTAssertEqual(service.requests, [coordinates])
         XCTAssertEqual(forecast, .preview)
     }
 
@@ -81,7 +82,7 @@ final class RepositoryTests: XCTestCase {
         let repository = DefaultForecastRepository(service: service)
 
         do {
-            _ = try await repository.forecast(for: .preview)
+            _ = try await repository.forecast(at: Coordinates(latitude: 52.52437, longitude: 13.41053))
             XCTFail("Expected the service error to be rethrown.")
         } catch {
             XCTAssertTrue(error is APIError)
@@ -115,10 +116,10 @@ private final class StubGeocodingService: GeocodingService {
 private final class StubForecastService: ForecastService {
     var result: Forecast?
     var error: Error?
-    private(set) var locations: [LocationDto] = []
+    private(set) var requests: [Coordinates] = []
 
-    func forecast(for location: LocationDto) async throws -> Forecast {
-        locations.append(location)
+    func forecast(at coordinates: Coordinates) async throws -> Forecast {
+        requests.append(coordinates)
 
         if let error {
             throw error

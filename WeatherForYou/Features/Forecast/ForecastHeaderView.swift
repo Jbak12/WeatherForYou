@@ -8,16 +8,17 @@
 import SwiftUI
 
 struct ForecastHeaderView: View {
-    let location: LocationDto
+    let name: String
+    let subtitle: String?
     let forecast: Forecast
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(location.name)
+            Text(name)
                 .font(.largeTitle.bold())
 
-            if !location.subtitle.isEmpty {
-                Text(location.subtitle)
+            if let subtitle {
+                Text(subtitle)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -51,7 +52,10 @@ struct ForecastHeaderView: View {
                         .foregroundStyle(.secondary)
                 }
             }
+        
         }
-        .
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(8)
+        .background(.thinMaterial, in: .rect(cornerRadius: 16))
     }
 }

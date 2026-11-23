@@ -46,7 +46,6 @@ final class LocationRowModelTests: XCTestCase {
 
         XCTAssertEqual(model.id, 42)
         XCTAssertEqual(model.timezone, "Europe/Warsaw")
-        XCTAssertEqual(model.location, location)
     }
 
     // MARK: - Helpers

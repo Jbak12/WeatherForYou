@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct LocationSearchContent: View {
-    @ObservedObject var model: LocationSearchModel
+    @ObservedObject var viewModel: LocationSearchViemodel
+    let onSelect: (LocationRowModel) -> Void
 
     var body: some View {
         content
@@ -18,9 +19,9 @@ struct LocationSearchContent: View {
 
     @ViewBuilder
     private var content: some View {
-        switch model.state {
+        switch viewModel.state {
         case .idle:
-            if model.trimmedQuery.isEmpty, !model.recentLocations.isEmpty {
+            if viewModel.trimmedQuery.isEmpty, !viewModel.recentLocations.isEmpty {
                 recentList
             } else {
                 ContentUnavailableView(
@@ -46,8 +47,8 @@ struct LocationSearchContent: View {
                 Button("Try Again", action: retry)
             }
         case .loaded:
-            List(model.results) { row in
-                LocationListRow(model: row)
+            List(viewModel.results) { row in
+                LocationListRow(model: row) { onSelect(row) }
             }
             .listStyle(.plain)
             .scrollContentBackground(.hidden)
@@ -57,15 +58,15 @@ struct LocationSearchContent: View {
     private var recentList: some View {
         List {
             Section {
-                ForEach(model.recentLocations) { row in
-                    LocationListRow(model: row)
+                ForEach(viewModel.recentLocations) { row in
+                    LocationListRow(model: row) { onSelect(row) }
                 }
                 .onDelete { indexSet in
-                    let rows = indexSet.map { model.recentLocations[$0] }
+                    let rows = indexSet.map { viewModel.recentLocations[$0] }
 
                     Task {
                         for row in rows {
-                            await model.removeRecentLocation(row)
+                            await viewModel.removeRecentLocation(row)
                         }
                     }
                 }
@@ -76,7 +77,7 @@ struct LocationSearchContent: View {
                     Spacer()
 
                     Button("Clear") {
-                        Task { await model.clearRecentLocations() }
+                        Task { await viewModel.clearRecentLocations() }
                     }
                     .font(.footnote)
                     .textCase(nil)
@@ -88,14 +89,15 @@ struct LocationSearchContent: View {
     }
 
     private func retry() {
-        Task { await model.search() }
+        Task { await viewModel.search() }
     }
 }
 
 #Preview {
     NavigationStack {
         LocationSearchContent(
-            model: LocationSearchModel(repository: PreviewLocationRepository())
+            viewModel: LocationSearchViemodel(repository: PreviewLocationRepository()),
+            onSelect: { _ in }
         )
     }
 }

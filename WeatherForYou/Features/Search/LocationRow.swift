@@ -65,7 +65,8 @@ struct LocationRow: View {
                         admin3: nil,
                         admin4: nil
                     )
-                )
+                ),
+                onSelect: {}
             )
         }
         .listStyle(.plain)

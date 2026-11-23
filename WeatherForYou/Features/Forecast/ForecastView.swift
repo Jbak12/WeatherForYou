@@ -9,29 +9,31 @@ import SwiftUI
 
 struct ForecastView: View {
     @StateObject private var model: ForecastViewModel
-
-    init(location: LocationDto) {
-        _model = StateObject(wrappedValue: ForecastViewModel(location: location))
-    }
+    let name: String
+    let subtitle: String?
 
     init(
-        location: LocationDto,
-        repository: ForecastRepository,
-        locationRepository: LocationRepository
+        coordinates: Coordinates,
+        name: String,
+        subtitle: String?,
+        repository: ForecastRepository? = nil,
+        onLoad: @escaping @MainActor () async -> Void = {}
     ) {
+        self.name = name
+        self.subtitle = subtitle
         _model = StateObject(
             wrappedValue: ForecastViewModel(
-                location: location,
-                repository: repository,
-                locationRepository: locationRepository
+                coordinates: coordinates,
+                repository: repository ?? DefaultForecastRepository(),
+                onLoad: onLoad
             )
         )
     }
 
     var body: some View {
-        ForecastContent()
+        ForecastContent(name: name, subtitle: subtitle)
             .environmentObject(model)
-            .navigationTitle(model.location.name)
+            .navigationTitle(name)
             .navigationBarTitleDisplayMode(.inline)
             .task {
                 await model.load()
@@ -42,9 +44,10 @@ struct ForecastView: View {
 #Preview {
     NavigationStack {
         ForecastView(
-            location: .preview,
-            repository: PreviewForecastRepository(),
-            locationRepository: PreviewLocationRepository()
+            coordinates: Coordinates(latitude: 52.52437, longitude: 13.41053),
+            name: "Berlin",
+            subtitle: "Land Berlin, Germany",
+            repository: PreviewForecastRepository()
         )
     }
 }

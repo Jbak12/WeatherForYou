@@ -10,6 +10,7 @@ import XCTest
 
 @MainActor
 final class ForecastServiceTests: XCTestCase {
+    private let coordinates = Coordinates(latitude: 52.52437, longitude: 13.41053)
 
     // MARK: - Request building
 
@@ -18,7 +19,7 @@ final class ForecastServiceTests: XCTestCase {
         client.result = makeResponse()
         let service = OpenMeteoForecastService(client: client, now: { .distantPast })
 
-        _ = try await service.forecast(for: .preview)
+        _ = try await service.forecast(at: coordinates)
 
         let request = try XCTUnwrap(client.requests.first)
         XCTAssertEqual(request.method, .get)
@@ -105,7 +106,7 @@ final class ForecastServiceTests: XCTestCase {
         client.result = makeResponse()
         let service = OpenMeteoForecastService(client: client, now: { .distantPast })
 
-        let forecast = try await service.forecast(for: .preview)
+        let forecast = try await service.forecast(at: coordinates)
 
         XCTAssertEqual(forecast.timeZone.identifier, "Europe/Berlin")
         XCTAssertEqual(forecast.hourly.count, 24)
@@ -141,7 +142,7 @@ final class ForecastServiceTests: XCTestCase {
         let now = Date(timeIntervalSince1970: TimeInterval(base + 5 * 3_600))
 
         let service = OpenMeteoForecastService(client: client, now: { now })
-        let forecast = try await service.forecast(for: .preview)
+        let forecast = try await service.forecast(at: coordinates)
 
         XCTAssertEqual(forecast.hourly.count, 24)
         XCTAssertEqual(
@@ -156,9 +157,8 @@ final class ForecastServiceTests: XCTestCase {
         let repository = StubForecastRepository()
         repository.result = .preview
         let model = ForecastViewModel(
-            location: .preview,
-            repository: repository,
-            locationRepository: StubLocationRepository()
+            coordinates: coordinates,
+            repository: repository
         )
 
         await model.load()
@@ -174,9 +174,8 @@ final class ForecastServiceTests: XCTestCase {
         let repository = StubForecastRepository()
         repository.error = APIError.invalidResponse
         let model = ForecastViewModel(
-            location: .preview,
-            repository: repository,
-            locationRepository: StubLocationRepository()
+            coordinates: coordinates,
+            repository: repository
         )
 
         await model.load()
@@ -188,34 +187,34 @@ final class ForecastServiceTests: XCTestCase {
         XCTAssertFalse(message.isEmpty)
     }
 
-    func testViewModelRecordsLocationAfterSuccessfulLoad() async {
+    func testViewModelNotifiesAfterSuccessfulLoad() async {
         let repository = StubForecastRepository()
         repository.result = .preview
-        let locationRepository = StubLocationRepository()
+        var didLoad = false
         let model = ForecastViewModel(
-            location: .preview,
+            coordinates: coordinates,
             repository: repository,
-            locationRepository: locationRepository
+            onLoad: { didLoad = true }
         )
 
         await model.load()
 
-        XCTAssertEqual(locationRepository.recorded, [.preview])
+        XCTAssertTrue(didLoad)
     }
 
-    func testViewModelDoesNotRecordLocationWhenLoadingFails() async {
+    func testViewModelDoesNotNotifyWhenLoadingFails() async {
         let repository = StubForecastRepository()
         repository.error = APIError.invalidResponse
-        let locationRepository = StubLocationRepository()
+        var didLoad = false
         let model = ForecastViewModel(
-            location: .preview,
+            coordinates: coordinates,
             repository: repository,
-            locationRepository: locationRepository
+            onLoad: { didLoad = true }
         )
 
         await model.load()
 
-        XCTAssertTrue(locationRepository.recorded.isEmpty)
+        XCTAssertFalse(didLoad)
     }
 
     // MARK: - Helpers
@@ -321,7 +320,7 @@ private final class StubForecastRepository: ForecastRepository {
     var result: Forecast?
     var error: Error?
 
-    func forecast(for location: LocationDto) async throws -> Forecast {
+    func forecast(at coordinates: Coordinates) async throws -> Forecast {
         if let error {
             throw error
         }

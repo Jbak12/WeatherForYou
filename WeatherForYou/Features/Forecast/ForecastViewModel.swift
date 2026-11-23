@@ -19,27 +19,18 @@ final class ForecastViewModel: ObservableObject {
     }
 
     @Published private(set) var state: State = .idle
-    let location: LocationDto
-
+    private let coordinates: Coordinates
     private let repository: ForecastRepository
-    private let locationRepository: LocationRepository
+    private let onLoad: @MainActor () async -> Void
 
-    /// Creates a model backed by the default repositories.
-    init(location: LocationDto) {
-        self.location = location
-        self.repository = DefaultForecastRepository()
-        self.locationRepository = DefaultLocationRepository()
-    }
-
-    /// Creates a model with injected dependencies, for previews and tests.
     init(
-        location: LocationDto,
+        coordinates: Coordinates,
         repository: ForecastRepository,
-        locationRepository: LocationRepository
+        onLoad: @escaping @MainActor () async -> Void = {}
     ) {
-        self.location = location
+        self.coordinates = coordinates
         self.repository = repository
-        self.locationRepository = locationRepository
+        self.onLoad = onLoad
     }
 
     func load() async {
@@ -48,11 +39,9 @@ final class ForecastViewModel: ObservableObject {
         state = .loading
 
         do {
-            let forecast = try await repository.forecast(for: location)
+            let forecast = try await repository.forecast(at: coordinates)
             state = .loaded(forecast)
-
-            // Persistence is best-effort and must never break the screen.
-            try? await locationRepository.recordView(of: location)
+            await onLoad()
         } catch is CancellationError {
             return
         } catch {

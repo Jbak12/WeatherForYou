@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ForecastContent: View {
     @EnvironmentObject private var model: ForecastViewModel
+    let name: String
+    let subtitle: String?
 
     var body: some View {
         switch model.state {
@@ -24,7 +26,7 @@ struct ForecastContent: View {
                 Button("Try Again", action: retry)
             }
         case let .loaded(forecast):
-            ForecastDetailsView(location: model.location, forecast: forecast)
+            ForecastDetailsView(name: name, subtitle: subtitle, forecast: forecast)
         }
     }
 
@@ -35,12 +37,11 @@ struct ForecastContent: View {
 
 #Preview {
     NavigationStack {
-        ForecastContent()
+        ForecastContent(name: "Berlin", subtitle: "Land Berlin, Germany")
             .environmentObject(
                 ForecastViewModel(
-                    location: .preview,
-                    repository: PreviewForecastRepository(),
-                    locationRepository: PreviewLocationRepository()
+                    coordinates: Coordinates(latitude: 52.52437, longitude: 13.41053),
+                    repository: PreviewForecastRepository()
                 )
             )
     }

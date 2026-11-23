@@ -162,7 +162,7 @@ final class GeocodingServiceTests: XCTestCase {
     func testModelResetsToIdleForShortQuery() async {
         let client = StubAPIClient()
         client.result = LocationSearchResponse()
-        let model = LocationSearchModel(
+        let model = LocationSearchViemodel(
             repository: DefaultLocationRepository(
                 service: OpenMeteoGeocodingService(client: client),
                 recentStore: StubRecentLocationStore()
@@ -181,7 +181,7 @@ final class GeocodingServiceTests: XCTestCase {
     func testModelReportsEmptyPhaseWhenNoResults() async {
         let client = StubAPIClient()
         client.result = LocationSearchResponse()
-        let model = LocationSearchModel(
+        let model = LocationSearchViemodel(
             repository: DefaultLocationRepository(
                 service: OpenMeteoGeocodingService(client: client),
                 recentStore: StubRecentLocationStore()
