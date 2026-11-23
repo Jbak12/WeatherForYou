@@ -22,6 +22,7 @@ struct ContentView: View {
         NavigationStack(path: $path) {
             LocationSearchContent(viewModel: locationSearchViewModel, onSelect: selectLocation)
                 .navigationTitle("search.title")
+                .navigationBarTitleDisplayMode(.large)
                 .searchable(
                     text: $locationSearchViewModel.query,
                     placement: .navigationBarDrawer(displayMode: .always),
